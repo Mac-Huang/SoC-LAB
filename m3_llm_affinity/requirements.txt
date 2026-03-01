@@ -1,0 +1,10 @@
+coremltools==8.2
+torch==2.3.1
+transformers==4.45.2
+numpy==1.26.4
+pandas==2.2.3
+tqdm==4.67.1
+PyYAML==6.0.2
+psutil==6.1.0
+urllib3==1.26.20
+matplotlib==3.9.4

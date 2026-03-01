@@ -1,0 +1,13 @@
+hf_model_id: openai-community/gpt2
+context_len: 64
+prefill_len: 63
+gen_tokens: 32
+batch_size: 1
+runs: 20
+warmup: 3
+compute_units_list:
+  - CPU_ONLY
+  - CPU_AND_GPU
+  - CPU_AND_NE
+  - ALL
+seed: 1337

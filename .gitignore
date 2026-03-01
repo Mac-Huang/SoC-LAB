@@ -1,0 +1,8 @@
+.DS_Store
+**/__pycache__/
+**/*.pyc
+
+# Local env and large generated artifacts
+m3_llm_affinity/.venv/
+m3_llm_affinity/artifacts/
+m3_llm_affinity/models/
