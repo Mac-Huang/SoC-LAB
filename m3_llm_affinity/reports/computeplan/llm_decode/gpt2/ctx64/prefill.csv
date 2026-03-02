@@ -1,0 +1,786 @@
+op_index,op_type,op_name,preferred_devices,supported_devices,estimated_cost
+0,const,,,,0.0
+1,const,,,,0.0
+2,const,,,,0.0
+3,const,,,,0.0
+4,ios18.gather,,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>,0.4220201031163936
+5,const,,,,0.0
+6,ios18.add,,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0011523322761541122
+7,const,,,,0.0
+8,ios18.expand_dims,,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>,1.050004486321351e-06
+9,const,,,,0.0
+10,ios18.expand_dims,,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>,1.050004486321351e-06
+11,const,,,,0.0
+12,tile,,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>,3.3368646510180884e-05
+13,const,,,,0.0
+14,const,,,,0.0
+15,ios18.cast,,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>,4.922206070326113e-05
+16,ios18.sub,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,2.7752870437072004e-05
+17,const,,,,0.0
+18,const,,,,0.0
+19,ios18.cast,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,2.0509191039264387e-05
+20,select,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,3.4185429961894714e-05
+21,const,,,,0.0
+22,const,,,,0.0
+23,ios18.cast,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,2.0509191039264387e-05
+24,select,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,3.4185429961894714e-05
+25,const,,,,0.0
+26,const,,,,0.0
+27,const,,,,0.0
+28,const,,,,0.0
+29,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033335574006677357
+30,const,,,,0.0
+31,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336951965258976
+32,const,,,,0.0
+33,const,,,,0.0
+34,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.001766610963363758
+35,const,,,,0.0
+36,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+37,const,,,,0.0
+38,const,,,,0.0
+39,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0006667390393051795
+40,const,,,,0.0
+41,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033338329923840606
+42,const,,,,0.0
+43,const,,,,0.0
+44,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033338329923840606
+45,const,,,,0.0
+46,const,,,,0.0
+47,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033338329923840606
+48,const,,,,0.0
+49,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00035342151427259535
+50,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00035342151427259535
+51,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+52,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006803842741597233
+53,const,,,,0.0
+54,const,,,,0.0
+55,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00035342151427259535
+56,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336951965258976
+57,const,,,,0.0
+58,const,,,,0.0
+59,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0017665744521989804
+60,const,,,,0.0
+61,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+62,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006764709739180312
+63,const,,,,0.0
+64,const,,,,0.0
+65,const,,,,0.0
+66,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033335574006677357
+67,const,,,,0.0
+68,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336951965258976
+69,const,,,,0.0
+70,const,,,,0.0
+71,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+72,const,,,,0.0
+73,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0013334436296458185
+74,const,,,,0.0
+75,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0013334229602670943
+76,const,,,,0.0
+77,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0013334367398529102
+78,const,,,,0.0
+79,const,,,,0.0
+80,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.02826491740144785
+81,const,,,,0.0
+82,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033337640944549793
+83,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006764709739180312
+84,const,,,,0.0
+85,const,,,,0.0
+86,const,,,,0.0
+87,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033335574006677357
+88,const,,,,0.0
+89,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336951965258976
+90,const,,,,0.0
+91,const,,,,0.0
+92,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.001766610963363758
+93,const,,,,0.0
+94,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+95,const,,,,0.0
+96,const,,,,0.0
+97,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0006667390393051795
+98,const,,,,0.0
+99,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033338329923840606
+100,const,,,,0.0
+101,const,,,,0.0
+102,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033338329923840606
+103,const,,,,0.0
+104,const,,,,0.0
+105,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033338329923840606
+106,const,,,,0.0
+107,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00035342151427259535
+108,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00035342151427259535
+109,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+110,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0006803842741597233
+111,const,,,,0.0
+112,const,,,,0.0
+113,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00035342151427259535
+114,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336951965258976
+115,const,,,,0.0
+116,const,,,,0.0
+117,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0017665744521989804
+118,const,,,,0.0
+119,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+120,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006764709739180312
+121,const,,,,0.0
+122,const,,,,0.0
+123,const,,,,0.0
+124,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033335574006677357
+125,const,,,,0.0
+126,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336951965258976
+127,const,,,,0.0
+128,const,,,,0.0
+129,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+130,const,,,,0.0
+131,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0013334436296458185
+132,const,,,,0.0
+133,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0013334229602670943
+134,const,,,,0.0
+135,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0013334367398529102
+136,const,,,,0.0
+137,const,,,,0.0
+138,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.02826491740144785
+139,const,,,,0.0
+140,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033337640944549793
+141,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006764709739180312
+142,const,,,,0.0
+143,const,,,,0.0
+144,const,,,,0.0
+145,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033335574006677357
+146,const,,,,0.0
+147,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336951965258976
+148,const,,,,0.0
+149,const,,,,0.0
+150,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.001766610963363758
+151,const,,,,0.0
+152,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+153,const,,,,0.0
+154,const,,,,0.0
+155,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006667390393051795
+156,const,,,,0.0
+157,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033338329923840606
+158,const,,,,0.0
+159,const,,,,0.0
+160,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033338329923840606
+161,const,,,,0.0
+162,const,,,,0.0
+163,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033338329923840606
+164,const,,,,0.0
+165,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00035342151427259535
+166,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00035342151427259535
+167,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+168,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0006803842741597233
+169,const,,,,0.0
+170,const,,,,0.0
+171,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00035342151427259535
+172,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336951965258976
+173,const,,,,0.0
+174,const,,,,0.0
+175,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0017665744521989804
+176,const,,,,0.0
+177,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+178,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0006764709739180312
+179,const,,,,0.0
+180,const,,,,0.0
+181,const,,,,0.0
+182,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033335574006677357
+183,const,,,,0.0
+184,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336951965258976
+185,const,,,,0.0
+186,const,,,,0.0
+187,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+188,const,,,,0.0
+189,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0013334436296458185
+190,const,,,,0.0
+191,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0013334229602670943
+192,const,,,,0.0
+193,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0013334367398529102
+194,const,,,,0.0
+195,const,,,,0.0
+196,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.02826491740144785
+197,const,,,,0.0
+198,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033337640944549793
+199,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0006764709739180312
+200,const,,,,0.0
+201,const,,,,0.0
+202,const,,,,0.0
+203,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033335574006677357
+204,const,,,,0.0
+205,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336951965258976
+206,const,,,,0.0
+207,const,,,,0.0
+208,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.001766610963363758
+209,const,,,,0.0
+210,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+211,const,,,,0.0
+212,const,,,,0.0
+213,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006667390393051795
+214,const,,,,0.0
+215,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033338329923840606
+216,const,,,,0.0
+217,const,,,,0.0
+218,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033338329923840606
+219,const,,,,0.0
+220,const,,,,0.0
+221,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033338329923840606
+222,const,,,,0.0
+223,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00035342151427259535
+224,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00035342151427259535
+225,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+226,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0006803842741597233
+227,const,,,,0.0
+228,const,,,,0.0
+229,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00035342151427259535
+230,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336951965258976
+231,const,,,,0.0
+232,const,,,,0.0
+233,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0017665744521989804
+234,const,,,,0.0
+235,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+236,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0006764709739180312
+237,const,,,,0.0
+238,const,,,,0.0
+239,const,,,,0.0
+240,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033335574006677357
+241,const,,,,0.0
+242,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336951965258976
+243,const,,,,0.0
+244,const,,,,0.0
+245,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+246,const,,,,0.0
+247,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0013334436296458185
+248,const,,,,0.0
+249,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0013334229602670943
+250,const,,,,0.0
+251,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0013334367398529102
+252,const,,,,0.0
+253,const,,,,0.0
+254,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.02826491740144785
+255,const,,,,0.0
+256,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033337640944549793
+257,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0006764709739180312
+258,const,,,,0.0
+259,const,,,,0.0
+260,const,,,,0.0
+261,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033335574006677357
+262,const,,,,0.0
+263,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336951965258976
+264,const,,,,0.0
+265,const,,,,0.0
+266,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.001766610963363758
+267,const,,,,0.0
+268,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+269,const,,,,0.0
+270,const,,,,0.0
+271,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0006667390393051795
+272,const,,,,0.0
+273,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033338329923840606
+274,const,,,,0.0
+275,const,,,,0.0
+276,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033338329923840606
+277,const,,,,0.0
+278,const,,,,0.0
+279,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033338329923840606
+280,const,,,,0.0
+281,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00035342151427259535
+282,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00035342151427259535
+283,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+284,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006803842741597233
+285,const,,,,0.0
+286,const,,,,0.0
+287,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00035342151427259535
+288,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336951965258976
+289,const,,,,0.0
+290,const,,,,0.0
+291,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0017665744521989804
+292,const,,,,0.0
+293,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+294,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0006764709739180312
+295,const,,,,0.0
+296,const,,,,0.0
+297,const,,,,0.0
+298,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033335574006677357
+299,const,,,,0.0
+300,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336951965258976
+301,const,,,,0.0
+302,const,,,,0.0
+303,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+304,const,,,,0.0
+305,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0013334436296458185
+306,const,,,,0.0
+307,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0013334229602670943
+308,const,,,,0.0
+309,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0013334367398529102
+310,const,,,,0.0
+311,const,,,,0.0
+312,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.02826491740144785
+313,const,,,,0.0
+314,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033337640944549793
+315,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0006764709739180312
+316,const,,,,0.0
+317,const,,,,0.0
+318,const,,,,0.0
+319,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033335574006677357
+320,const,,,,0.0
+321,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336951965258976
+322,const,,,,0.0
+323,const,,,,0.0
+324,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.001766610963363758
+325,const,,,,0.0
+326,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+327,const,,,,0.0
+328,const,,,,0.0
+329,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0006667390393051795
+330,const,,,,0.0
+331,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033338329923840606
+332,const,,,,0.0
+333,const,,,,0.0
+334,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033338329923840606
+335,const,,,,0.0
+336,const,,,,0.0
+337,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033338329923840606
+338,const,,,,0.0
+339,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00035342151427259535
+340,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00035342151427259535
+341,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+342,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006803842741597233
+343,const,,,,0.0
+344,const,,,,0.0
+345,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00035342151427259535
+346,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336951965258976
+347,const,,,,0.0
+348,const,,,,0.0
+349,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0017665744521989804
+350,const,,,,0.0
+351,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+352,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006764709739180312
+353,const,,,,0.0
+354,const,,,,0.0
+355,const,,,,0.0
+356,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033335574006677357
+357,const,,,,0.0
+358,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336951965258976
+359,const,,,,0.0
+360,const,,,,0.0
+361,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+362,const,,,,0.0
+363,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0013334436296458185
+364,const,,,,0.0
+365,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0013334229602670943
+366,const,,,,0.0
+367,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0013334367398529102
+368,const,,,,0.0
+369,const,,,,0.0
+370,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.02826491740144785
+371,const,,,,0.0
+372,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033337640944549793
+373,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006764709739180312
+374,const,,,,0.0
+375,const,,,,0.0
+376,const,,,,0.0
+377,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033335574006677357
+378,const,,,,0.0
+379,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336951965258976
+380,const,,,,0.0
+381,const,,,,0.0
+382,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.001766610963363758
+383,const,,,,0.0
+384,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+385,const,,,,0.0
+386,const,,,,0.0
+387,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0006667390393051795
+388,const,,,,0.0
+389,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033338329923840606
+390,const,,,,0.0
+391,const,,,,0.0
+392,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033338329923840606
+393,const,,,,0.0
+394,const,,,,0.0
+395,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033338329923840606
+396,const,,,,0.0
+397,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00035342151427259535
+398,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00035342151427259535
+399,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+400,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0006803842741597233
+401,const,,,,0.0
+402,const,,,,0.0
+403,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00035342151427259535
+404,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336951965258976
+405,const,,,,0.0
+406,const,,,,0.0
+407,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0017665744521989804
+408,const,,,,0.0
+409,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+410,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006764709739180312
+411,const,,,,0.0
+412,const,,,,0.0
+413,const,,,,0.0
+414,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033335574006677357
+415,const,,,,0.0
+416,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336951965258976
+417,const,,,,0.0
+418,const,,,,0.0
+419,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+420,const,,,,0.0
+421,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0013334436296458185
+422,const,,,,0.0
+423,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0013334229602670943
+424,const,,,,0.0
+425,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0013334367398529102
+426,const,,,,0.0
+427,const,,,,0.0
+428,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.02826491740144785
+429,const,,,,0.0
+430,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033337640944549793
+431,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006764709739180312
+432,const,,,,0.0
+433,const,,,,0.0
+434,const,,,,0.0
+435,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033335574006677357
+436,const,,,,0.0
+437,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336951965258976
+438,const,,,,0.0
+439,const,,,,0.0
+440,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.001766610963363758
+441,const,,,,0.0
+442,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+443,const,,,,0.0
+444,const,,,,0.0
+445,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006667390393051795
+446,const,,,,0.0
+447,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033338329923840606
+448,const,,,,0.0
+449,const,,,,0.0
+450,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033338329923840606
+451,const,,,,0.0
+452,const,,,,0.0
+453,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033338329923840606
+454,const,,,,0.0
+455,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00035342151427259535
+456,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00035342151427259535
+457,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+458,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0006803842741597233
+459,const,,,,0.0
+460,const,,,,0.0
+461,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00035342151427259535
+462,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336951965258976
+463,const,,,,0.0
+464,const,,,,0.0
+465,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0017665744521989804
+466,const,,,,0.0
+467,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+468,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0006764709739180312
+469,const,,,,0.0
+470,const,,,,0.0
+471,const,,,,0.0
+472,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033335574006677357
+473,const,,,,0.0
+474,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336951965258976
+475,const,,,,0.0
+476,const,,,,0.0
+477,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+478,const,,,,0.0
+479,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0013334436296458185
+480,const,,,,0.0
+481,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0013334229602670943
+482,const,,,,0.0
+483,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0013334367398529102
+484,const,,,,0.0
+485,const,,,,0.0
+486,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.02826491740144785
+487,const,,,,0.0
+488,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033337640944549793
+489,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0006764709739180312
+490,const,,,,0.0
+491,const,,,,0.0
+492,const,,,,0.0
+493,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033335574006677357
+494,const,,,,0.0
+495,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336951965258976
+496,const,,,,0.0
+497,const,,,,0.0
+498,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.001766610963363758
+499,const,,,,0.0
+500,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+501,const,,,,0.0
+502,const,,,,0.0
+503,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006667390393051795
+504,const,,,,0.0
+505,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033338329923840606
+506,const,,,,0.0
+507,const,,,,0.0
+508,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033338329923840606
+509,const,,,,0.0
+510,const,,,,0.0
+511,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033338329923840606
+512,const,,,,0.0
+513,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00035342151427259535
+514,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00035342151427259535
+515,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+516,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0006803842741597233
+517,const,,,,0.0
+518,const,,,,0.0
+519,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00035342151427259535
+520,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336951965258976
+521,const,,,,0.0
+522,const,,,,0.0
+523,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0017665744521989804
+524,const,,,,0.0
+525,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+526,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0006764709739180312
+527,const,,,,0.0
+528,const,,,,0.0
+529,const,,,,0.0
+530,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033335574006677357
+531,const,,,,0.0
+532,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336951965258976
+533,const,,,,0.0
+534,const,,,,0.0
+535,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+536,const,,,,0.0
+537,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0013334436296458185
+538,const,,,,0.0
+539,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0013334229602670943
+540,const,,,,0.0
+541,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0013334367398529102
+542,const,,,,0.0
+543,const,,,,0.0
+544,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.02826491740144785
+545,const,,,,0.0
+546,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033337640944549793
+547,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0006764709739180312
+548,const,,,,0.0
+549,const,,,,0.0
+550,const,,,,0.0
+551,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033335574006677357
+552,const,,,,0.0
+553,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336951965258976
+554,const,,,,0.0
+555,const,,,,0.0
+556,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.001766610963363758
+557,const,,,,0.0
+558,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+559,const,,,,0.0
+560,const,,,,0.0
+561,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0006667390393051795
+562,const,,,,0.0
+563,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033338329923840606
+564,const,,,,0.0
+565,const,,,,0.0
+566,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033338329923840606
+567,const,,,,0.0
+568,const,,,,0.0
+569,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033338329923840606
+570,const,,,,0.0
+571,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00035342151427259535
+572,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00035342151427259535
+573,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+574,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006803842741597233
+575,const,,,,0.0
+576,const,,,,0.0
+577,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00035342151427259535
+578,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336951965258976
+579,const,,,,0.0
+580,const,,,,0.0
+581,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0017665744521989804
+582,const,,,,0.0
+583,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+584,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0006764709739180312
+585,const,,,,0.0
+586,const,,,,0.0
+587,const,,,,0.0
+588,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033335574006677357
+589,const,,,,0.0
+590,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336951965258976
+591,const,,,,0.0
+592,const,,,,0.0
+593,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+594,const,,,,0.0
+595,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0013334436296458185
+596,const,,,,0.0
+597,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0013334229602670943
+598,const,,,,0.0
+599,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0013334367398529102
+600,const,,,,0.0
+601,const,,,,0.0
+602,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.02826491740144785
+603,const,,,,0.0
+604,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033337640944549793
+605,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0006764709739180312
+606,const,,,,0.0
+607,const,,,,0.0
+608,const,,,,0.0
+609,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033335574006677357
+610,const,,,,0.0
+611,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336951965258976
+612,const,,,,0.0
+613,const,,,,0.0
+614,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.001766610963363758
+615,const,,,,0.0
+616,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+617,const,,,,0.0
+618,const,,,,0.0
+619,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0006667390393051795
+620,const,,,,0.0
+621,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033338329923840606
+622,const,,,,0.0
+623,const,,,,0.0
+624,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033338329923840606
+625,const,,,,0.0
+626,const,,,,0.0
+627,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033338329923840606
+628,const,,,,0.0
+629,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00035342151427259535
+630,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00035342151427259535
+631,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+632,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006803842741597233
+633,const,,,,0.0
+634,const,,,,0.0
+635,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00035342151427259535
+636,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336951965258976
+637,const,,,,0.0
+638,const,,,,0.0
+639,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0017665744521989804
+640,const,,,,0.0
+641,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+642,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006764709739180312
+643,const,,,,0.0
+644,const,,,,0.0
+645,const,,,,0.0
+646,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033335574006677357
+647,const,,,,0.0
+648,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336951965258976
+649,const,,,,0.0
+650,const,,,,0.0
+651,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+652,const,,,,0.0
+653,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0013334436296458185
+654,const,,,,0.0
+655,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0013334229602670943
+656,const,,,,0.0
+657,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0013334367398529102
+658,const,,,,0.0
+659,const,,,,0.0
+660,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.02826491740144785
+661,const,,,,0.0
+662,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033337640944549793
+663,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0006764709739180312
+664,const,,,,0.0
+665,const,,,,0.0
+666,const,,,,0.0
+667,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033335574006677357
+668,const,,,,0.0
+669,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336951965258976
+670,const,,,,0.0
+671,const,,,,0.0
+672,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.001766610963363758
+673,const,,,,0.0
+674,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.001000087889579045
+675,const,,,,0.0
+676,const,,,,0.0
+677,split,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.0006667390393051795
+678,const,,,,0.0
+679,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033338329923840606
+680,const,,,,0.0
+681,const,,,,0.0
+682,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033338329923840606
+683,const,,,,0.0
+684,const,,,,0.0
+685,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033338329923840606
+686,const,,,,0.0
+687,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00035342151427259535
+688,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00035342151427259535
+689,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00035342151427259535
+690,ios18.scaled_dot_product_attention,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0006803842741597233
+691,const,,,,0.0
+692,const,,,,0.0
+693,ios18.transpose,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00035342151427259535
+694,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336951965258976
+695,const,,,,0.0
+696,const,,,,0.0
+697,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.0017665744521989804
+698,const,,,,0.0
+699,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033337640944549793
+700,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006764709739180312
+701,const,,,,0.0
+702,const,,,,0.0
+703,const,,,,0.0
+704,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033335574006677357
+705,const,,,,0.0
+706,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336951965258976
+707,const,,,,0.0
+708,const,,,,0.0
+709,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0017666292189461477
+710,const,,,,0.0
+711,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.0013334436296458185
+712,const,,,,0.0
+713,ios18.gelu,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0013334229602670943
+714,const,,,,0.0
+715,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0013334367398529102
+716,const,,,,0.0
+717,const,,,,0.0
+718,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.02826491740144785
+719,const,,,,0.0
+720,ios18.reshape,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033337640944549793
+721,ios18.add,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.0006764709739180312
+722,const,,,,0.0
+723,const,,,,0.0
+724,const,,,,0.0
+725,ios18.layer_norm,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033335574006677357
+726,const,,,,0.0
+727,ios18.linear,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.000706484585663245
+728,const,,,,0.0
+729,const,,,,0.0
+730,const,,,,0.0
+731,const,,,,0.0
+732,ios18.slice_by_index,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.01108038198332501
+733,const,,,,0.0
+734,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033336262985968163
+735,const,,,,0.0
+736,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336262985968163
+737,const,,,,0.0
+738,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336262985968163
+739,const,,,,0.0
+740,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336262985968163
+741,const,,,,0.0
+742,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336262985968163
+743,const,,,,0.0
+744,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336262985968163
+745,const,,,,0.0
+746,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033336262985968163
+747,const,,,,0.0
+748,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336262985968163
+749,const,,,,0.0
+750,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336262985968163
+751,const,,,,0.0
+752,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336262985968163
+753,const,,,,0.0
+754,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336262985968163
+755,const,,,,0.0
+756,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336262985968163
+757,const,,,,0.0
+758,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033336262985968163
+759,const,,,,0.0
+760,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336262985968163
+761,const,,,,0.0
+762,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336262985968163
+763,const,,,,0.0
+764,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336262985968163
+765,const,,,,0.0
+766,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336262985968163
+767,const,,,,0.0
+768,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336262985968163
+769,const,,,,0.0
+770,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.00033336262985968163
+771,const,,,,0.0
+772,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.00033336262985968163
+773,const,,,,0.0
+774,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,0.00033336262985968163
+775,const,,,,0.0
+776,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,0.00033336262985968163
+777,const,,,,0.0
+778,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,0.00033336262985968163
+779,const,,,,0.0
+780,ios18.squeeze,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b20>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95be0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95b80>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95c40>,0.00033336262985968163
+781,const,,,,0.0
+782,stack,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95b80>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95ac0>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95a60>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95be0>,0.0021668192002269365
+783,const,,,,0.0
+784,stack,,<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95a60>,<coremltools.models.compute_device.MLCPUComputeDevice object at 0x133e95b20>|<coremltools.models.compute_device.MLGPUComputeDevice object at 0x133e95c40>|<coremltools.models.compute_device.MLNeuralEngineComputeDevice object at 0x133e95ac0>,0.0021668192002269365

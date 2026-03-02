@@ -1,0 +1,268 @@
+{
+  "context_len": 128,
+  "decode": {
+    "csv": "/Users/Patron/Desktop/Develop/SoC-Lab/m3_llm_affinity/reports/computeplan_gpt2_ctx128_decode.csv",
+    "num_operations": 1002,
+    "preferred_device_counts": {
+      "CPU": 0,
+      "GPU": 423,
+      "NE": 0
+    },
+    "top_20_ops_by_estimated_cost": [
+      {
+        "estimated_cost": 0.5541554339013961,
+        "op_index": 173,
+        "op_name": "",
+        "op_type": "ios18.gather"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 253,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 315,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 377,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 439,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 501,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 563,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 625,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 687,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 749,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 811,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 873,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011812226390261315,
+        "op_index": 935,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.011291123460081444,
+        "op_index": 180,
+        "op_name": "",
+        "op_type": "ios18.gather"
+      },
+      {
+        "estimated_cost": 0.006282322373978805,
+        "op_index": 999,
+        "op_name": "",
+        "op_type": "stack"
+      },
+      {
+        "estimated_cost": 0.006282322373978805,
+        "op_index": 1001,
+        "op_name": "",
+        "op_type": "stack"
+      },
+      {
+        "estimated_cost": 0.0062333302938420605,
+        "op_index": 4,
+        "op_name": "",
+        "op_type": "ios18.slice_by_index"
+      },
+      {
+        "estimated_cost": 0.0062333302938420605,
+        "op_index": 11,
+        "op_name": "",
+        "op_type": "ios18.slice_by_index"
+      },
+      {
+        "estimated_cost": 0.0062333302938420605,
+        "op_index": 18,
+        "op_name": "",
+        "op_type": "ios18.slice_by_index"
+      },
+      {
+        "estimated_cost": 0.0062333302938420605,
+        "op_index": 25,
+        "op_name": "",
+        "op_type": "ios18.slice_by_index"
+      }
+    ]
+  },
+  "model_alias": "gpt2",
+  "model_id": "openai-community/gpt2",
+  "model_slug": "openai-community_gpt2",
+  "prefill": {
+    "csv": "/Users/Patron/Desktop/Develop/SoC-Lab/m3_llm_affinity/reports/computeplan_gpt2_ctx128_prefill.csv",
+    "num_operations": 785,
+    "preferred_device_counts": {
+      "CPU": 6,
+      "GPU": 0,
+      "NE": 346
+    },
+    "top_20_ops_by_estimated_cost": [
+      {
+        "estimated_cost": 0.2671986382390267,
+        "op_index": 4,
+        "op_name": "",
+        "op_type": "ios18.gather"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 80,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 138,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 196,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 254,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 312,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 370,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 428,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 486,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 544,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 602,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 660,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.03607539806241701,
+        "op_index": 718,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.014030853708321226,
+        "op_index": 732,
+        "op_name": "",
+        "op_type": "ios18.slice_by_index"
+      },
+      {
+        "estimated_cost": 0.0027655755810301226,
+        "op_index": 782,
+        "op_name": "",
+        "op_type": "stack"
+      },
+      {
+        "estimated_cost": 0.0027655755810301226,
+        "op_index": 784,
+        "op_name": "",
+        "op_type": "stack"
+      },
+      {
+        "estimated_cost": 0.0022547463315723383,
+        "op_index": 34,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.0022547463315723383,
+        "op_index": 92,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.0022547463315723383,
+        "op_index": 150,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      },
+      {
+        "estimated_cost": 0.0022547463315723383,
+        "op_index": 208,
+        "op_name": "",
+        "op_type": "ios18.linear"
+      }
+    ]
+  }
+}

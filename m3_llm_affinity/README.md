@@ -94,9 +94,11 @@ Per `(model_id, context_len)` variant:
 
 ### Compute plan outputs
 
-- `reports/computeplan_<model_alias>_ctx<context_len>_prefill.csv`
-- `reports/computeplan_<model_alias>_ctx<context_len>_decode.csv`
-- `reports/computeplan_<model_alias>_ctx<context_len>_summary.json`
+- Runtime script output (default): `reports/computeplan_<model_alias>_ctx<context_len>_*.{csv,json}`
+- Organized retained layout:
+  - `reports/computeplan/<task_type>/<model_alias>/ctx<context_len>/prefill.csv`
+  - `reports/computeplan/<task_type>/<model_alias>/ctx<context_len>/decode.csv`
+  - `reports/computeplan/<task_type>/<model_alias>/ctx<context_len>/summary.json`
 
 Backward-compatible fixed report names are still written:
 
@@ -106,9 +108,9 @@ Backward-compatible fixed report names are still written:
 
 ## Results Files
 
-Suite run writes one bench JSONL per model/context:
+Suite run writes one bench JSONL per model/context. For long-term storage in this repo, files are normalized to:
 
-- `results/<timestamp>_<model_alias>_ctx<context_len>_bench.jsonl`
+- `results/<task_type>/<model_alias>/sweep_<run_id>/ctx<context_len>_bench.jsonl`
 
 Each JSONL includes:
 
@@ -134,19 +136,17 @@ python scripts/07_analyze_results.py --suite-config configs/suite.yaml
 
 By default, analysis loads the latest `N` `*_bench.jsonl` files from `results/` (`N` from `suite.pick_latest_n_jsonl`, default `50`).
 
-Outputs in `reports/analysis/`:
+Organized retained output layout:
 
-1. `latest_summary.csv`
-2. `latest_summary.json`
-3. `latest_summary.md`
-4. Per-model grouped-bar figures:
-   - `fig_<model>_ttft_ms.png`
-   - `fig_<model>_tokens_per_sec.png`
-   - `fig_<model>_tflops_prefill.png`
-   - `fig_<model>_tflops_decode.png`
-   - `fig_<model>_peak_rss_mb.png`
-5. Combined figure:
-   - `fig_all_models_ttft_vs_throughput.png`
+- `reports/analysis/<task_type>/<model_alias>/sweep_<run_id>/summary.csv`
+- `reports/analysis/<task_type>/<model_alias>/sweep_<run_id>/summary.json`
+- `reports/analysis/<task_type>/<model_alias>/sweep_<run_id>/summary.md`
+- `reports/analysis/<task_type>/<model_alias>/sweep_<run_id>/ttft_ms.png`
+- `reports/analysis/<task_type>/<model_alias>/sweep_<run_id>/tokens_per_sec.png`
+- `reports/analysis/<task_type>/<model_alias>/sweep_<run_id>/tflops_prefill.png`
+- `reports/analysis/<task_type>/<model_alias>/sweep_<run_id>/tflops_decode.png`
+- `reports/analysis/<task_type>/<model_alias>/sweep_<run_id>/peak_rss_mb.png`
+- `reports/analysis/<task_type>/<model_alias>/sweep_<run_id>/ttft_vs_throughput_panel.png`
 
 ### Inspect Summary CSV Quickly
 
@@ -155,6 +155,18 @@ python - <<'PY'
 import pandas as pd
 from pathlib import Path
 p = Path('reports/analysis/latest_summary.csv')
+print(p.resolve())
+print(pd.read_csv(p).head(20).to_string(index=False))
+PY
+```
+
+For the retained GPT-2 run in this repo, use:
+
+```bash
+python - <<'PY'
+import pandas as pd
+from pathlib import Path
+p = Path('reports/analysis/llm_decode/gpt2/sweep_20260302_123805/summary.csv')
 print(p.resolve())
 print(pd.read_csv(p).head(20).to_string(index=False))
 PY

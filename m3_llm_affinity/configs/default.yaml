@@ -1,7 +1,8 @@
 hf_model_id: openai-community/gpt2
 context_len: 64
+context_len_sweep: [64, 128, 256, 512]
 prefill_len: 63
-gen_tokens: 32
+gen_tokens: 64
 batch_size: 1
 runs: 20
 warmup: 3
