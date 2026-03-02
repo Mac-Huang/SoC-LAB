@@ -17,6 +17,8 @@ import numpy as np
 import psutil
 import yaml
 
+from lib_paths import coreml_paths, default_model_alias, slugify_model_id, torch_paths
+
 ROOT = Path(__file__).resolve().parents[1]
 
 CU_MAP = {
@@ -45,6 +47,54 @@ def load_flops_module() -> Any:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def resolve_context_len(raw_cfg: Dict[str, Any], override: int | None) -> int:
+    if override is not None:
+        return int(override)
+
+    context_len = int(raw_cfg["context_len"])
+    cfg_prefill = raw_cfg.get("prefill_len")
+    if cfg_prefill is not None and int(cfg_prefill) != context_len - 1:
+        raise ValueError("prefill_len must equal context_len - 1")
+    return context_len
+
+
+def resolve_model_id(raw_cfg: Dict[str, Any], override: str | None, meta: Dict[str, Any] | None = None) -> str:
+    if override:
+        return str(override)
+    if meta and meta.get("hf_model_id"):
+        return str(meta["hf_model_id"])
+    return str(raw_cfg["hf_model_id"])
+
+
+def resolve_model_alias(
+    override: str | None,
+    raw_cfg: Dict[str, Any],
+    model_id: str,
+    meta: Dict[str, Any] | None = None,
+) -> str:
+    if override:
+        return str(override)
+    if raw_cfg.get("model_alias"):
+        return str(raw_cfg["model_alias"])
+    if meta and meta.get("model_alias"):
+        return str(meta["model_alias"])
+    return default_model_alias(model_id)
+
+
+def resolve_result_path(path_arg: str | None) -> Path:
+    if path_arg is not None:
+        out_path = Path(path_arg)
+        if not out_path.is_absolute():
+            out_path = ROOT / out_path
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        return out_path
+
+    results_dir = ROOT / "results"
+    results_dir.mkdir(parents=True, exist_ok=True)
+    ts = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    return results_dir / f"{ts}_bench.jsonl"
 
 
 def output_by_name(outputs: Dict[str, Any], preferred_names: Sequence[str]) -> np.ndarray:
@@ -124,7 +174,7 @@ def run_single_benchmark(
         step_ms = (perf_counter() - t1) * 1000.0
         decode_step_latencies.append(step_ms)
 
-        logits = output_by_name(decode_outputs, ["logits"]).astype(np.float16, copy=False)
+        logits = output_by_name(decode_outputs, ["logits", "logits_last"]).astype(np.float16, copy=False)
         present_key = output_by_name(decode_outputs, ["present_key", "past_key"]).astype(np.float16, copy=False)
         present_value = output_by_name(decode_outputs, ["present_value", "past_value"]).astype(np.float16, copy=False)
 
@@ -138,10 +188,17 @@ def run_single_benchmark(
     tokens_per_sec = float(gen_tokens / (total_decode_ms / 1000.0)) if total_decode_ms > 0 else 0.0
 
     decode_stats = {
-        "mean": float(np.mean(np.asarray(decode_step_latencies, dtype=np.float64))),
-        "median": float(np.median(np.asarray(decode_step_latencies, dtype=np.float64))),
+        "mean": float(np.mean(np.asarray(decode_step_latencies, dtype=np.float64)))
+        if decode_step_latencies
+        else 0.0,
+        "median": float(np.median(np.asarray(decode_step_latencies, dtype=np.float64)))
+        if decode_step_latencies
+        else 0.0,
         "p95": p95(decode_step_latencies),
     }
+
+    first_decode_step_ms = float(decode_step_latencies[0]) if decode_step_latencies else 0.0
+    ttft_ms = float(prefill_latency_ms + first_decode_step_ms)
 
     prefill_flops = float(flops_module.flops_prefill(prefill_len, model_meta))
     decode_step_flops = float(flops_module.flops_decode_step(prefill_len, model_meta))
@@ -153,6 +210,10 @@ def run_single_benchmark(
     return {
         "prefill_latency_ms": float(prefill_latency_ms),
         "decode_step_latency_ms_stats": decode_stats,
+        "first_decode_step_ms": first_decode_step_ms,
+        "tpot_ms_mean": float(decode_stats["mean"]),
+        "tpot_ms_p95": float(decode_stats["p95"]),
+        "ttft_ms": ttft_ms,
         "total_decode_latency_ms": total_decode_ms,
         "tokens_per_sec": tokens_per_sec,
         "effective_TFLOPS_prefill": float(tflops_prefill) if tflops_prefill is not None else None,
@@ -178,39 +239,89 @@ def scenario_list(
     return [(prefill_cu, decode_cu)]
 
 
+def error_record(base: Dict[str, Any], process: psutil.Process, err: Dict[str, str], run_index: int | None) -> Dict[str, Any]:
+    return {
+        **base,
+        "run_index": run_index,
+        "prefill_latency_ms": None,
+        "decode_step_latency_ms_stats": None,
+        "first_decode_step_ms": None,
+        "tpot_ms_mean": None,
+        "tpot_ms_p95": None,
+        "ttft_ms": None,
+        "total_decode_latency_ms": None,
+        "tokens_per_sec": None,
+        "effective_TFLOPS_prefill": None,
+        "effective_TFLOPS_decode": None,
+        "peak_rss_mb": float(process.memory_info().rss / (1024.0 * 1024.0)),
+        "status": "error",
+        "errors": err,
+        "error_type": err["type"],
+        "error_message": err["message"],
+        "traceback_summary": err["traceback_summary"],
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/default.yaml")
+    parser.add_argument("--context-len", type=int)
+    parser.add_argument("--model-id")
+    parser.add_argument("--model-alias")
+    parser.add_argument("--variant-dir")
     parser.add_argument("--mode", choices=["whole", "split"], required=True)
     parser.add_argument("--prefill-cu", choices=tuple(CU_MAP.keys()))
     parser.add_argument("--decode-cu", choices=tuple(CU_MAP.keys()))
     parser.add_argument("--cu", choices=tuple(CU_MAP.keys()))
     parser.add_argument("--runs", type=int)
     parser.add_argument("--warmup", type=int)
+    parser.add_argument("--gen-tokens", type=int)
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--results-path")
     args = parser.parse_args()
 
     cfg = load_yaml((ROOT / args.config).resolve())
-    meta = load_json(ROOT / "artifacts" / "model_meta.json")
+    context_len = resolve_context_len(cfg, args.context_len)
+    prefill_len = int(context_len - 1)
+
+    model_id_hint = str(args.model_id or cfg.get("hf_model_id"))
+    torch_map = torch_paths(
+        model_id=model_id_hint,
+        context_len=context_len,
+        variant_dir=args.variant_dir,
+        legacy=args.variant_dir is None,
+    )
+    meta_path = torch_map["model_meta_json"]
+    if not meta_path.exists():
+        legacy_meta = ROOT / "artifacts" / "model_meta.json"
+        if args.variant_dir is None and legacy_meta.exists():
+            meta_path = legacy_meta
+        else:
+            raise FileNotFoundError(
+                f"model_meta not found at {meta_path}. "
+                "Run scripts/01_export_torch.py for this context/model first."
+            )
+
+    meta = load_json(meta_path)
+    model_id = resolve_model_id(cfg, args.model_id, meta=meta)
+    model_alias = resolve_model_alias(args.model_alias, cfg, model_id, meta=meta)
+    variant_id = f"{slugify_model_id(model_id)}/ctx{context_len}"
+
     flops_module = load_flops_module()
 
-    model_id = str(cfg["hf_model_id"])
-    context_len = int(cfg["context_len"])
-    prefill_len = int(cfg["prefill_len"])
-    gen_tokens = int(cfg["gen_tokens"])
-    runs = int(args.runs if args.runs is not None else cfg["runs"])
-    warmup = int(args.warmup if args.warmup is not None else cfg["warmup"])
-    seed = int(cfg["seed"])
+    gen_tokens = int(args.gen_tokens if args.gen_tokens is not None else cfg.get("gen_tokens", 32))
+    runs = int(args.runs if args.runs is not None else cfg.get("runs", 20))
+    warmup = int(args.warmup if args.warmup is not None else cfg.get("warmup", 3))
+    seed = int(args.seed if args.seed is not None else cfg.get("seed", 1337))
 
-    if prefill_len != context_len - 1:
-        raise ValueError("prefill_len must equal context_len - 1")
-
-    for cu_name in cfg["compute_units_list"]:
+    compute_units_list = [str(x) for x in cfg.get("compute_units_list", list(CU_MAP.keys()))]
+    for cu_name in compute_units_list:
         if cu_name not in CU_MAP:
             raise ValueError(f"Unsupported compute unit in config: {cu_name}")
 
     scenarios = scenario_list(
         mode=args.mode,
-        config_compute_units=cfg["compute_units_list"],
+        config_compute_units=compute_units_list,
         cu=args.cu,
         prefill_cu=args.prefill_cu,
         decode_cu=args.decode_cu,
@@ -220,15 +331,29 @@ def main() -> int:
     rng = np.random.default_rng(seed)
     prompt_tokens = rng.integers(0, vocab_size, size=(1, prefill_len), dtype=np.int32)
 
-    prefill_path = ROOT / "models" / "prefill.mlpackage"
-    decode_path = ROOT / "models" / "decode.mlpackage"
-    if not prefill_path.exists() or not decode_path.exists():
-        raise FileNotFoundError("Core ML models not found. Run make convert first.")
+    model_paths = coreml_paths(model_id=model_id, context_len=context_len, legacy=False)
+    prefill_path = model_paths["prefill_mlpackage"]
+    decode_path = model_paths["decode_mlpackage"]
 
-    results_dir = ROOT / "results"
-    results_dir.mkdir(parents=True, exist_ok=True)
-    ts = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
-    result_path = results_dir / f"{ts}_bench.jsonl"
+    # Optional variant-local coreml path override.
+    if args.variant_dir:
+        local_paths = coreml_paths(model_id=model_id, context_len=context_len, variant_dir=args.variant_dir, legacy=False)
+        if local_paths["prefill_mlpackage"].exists() and local_paths["decode_mlpackage"].exists():
+            prefill_path = local_paths["prefill_mlpackage"]
+            decode_path = local_paths["decode_mlpackage"]
+
+    if not prefill_path.exists() or not decode_path.exists():
+        legacy_paths = coreml_paths(model_id=model_id, context_len=context_len, legacy=True)
+        if legacy_paths["prefill_mlpackage"].exists() and legacy_paths["decode_mlpackage"].exists():
+            prefill_path = legacy_paths["prefill_mlpackage"]
+            decode_path = legacy_paths["decode_mlpackage"]
+        else:
+            raise FileNotFoundError(
+                f"Core ML models not found for context_len={context_len}. "
+                f"Expected {prefill_path} and {decode_path}. Run conversion first."
+            )
+
+    result_path = resolve_result_path(args.results_path)
 
     process = psutil.Process()
 
@@ -237,6 +362,8 @@ def main() -> int:
             base = {
                 "timestamp": dt.datetime.now().isoformat(),
                 "model_id": model_id,
+                "model_alias": model_alias,
+                "variant_id": variant_id,
                 "context_len": context_len,
                 "prefill_len": prefill_len,
                 "gen_tokens": gen_tokens,
@@ -256,23 +383,7 @@ def main() -> int:
                 )
             except Exception as exc:
                 err = parse_error(exc)
-                record = {
-                    **base,
-                    "run_index": None,
-                    "prefill_latency_ms": None,
-                    "decode_step_latency_ms_stats": None,
-                    "total_decode_latency_ms": None,
-                    "tokens_per_sec": None,
-                    "effective_TFLOPS_prefill": None,
-                    "effective_TFLOPS_decode": None,
-                    "peak_rss_mb": float(process.memory_info().rss / (1024.0 * 1024.0)),
-                    "status": "error",
-                    "errors": err,
-                    "error_type": err["type"],
-                    "error_message": err["message"],
-                    "traceback_summary": err["traceback_summary"],
-                }
-                out.write(json.dumps(record) + "\n")
+                out.write(json.dumps(error_record(base, process, err, run_index=None)) + "\n")
                 out.flush()
                 print(
                     "scenario failed during model load "
@@ -295,26 +406,8 @@ def main() -> int:
                     )
                 except Exception as exc:
                     err = parse_error(exc)
-                    record = {
-                        **base,
-                        "run_index": None,
-                        "prefill_latency_ms": None,
-                        "decode_step_latency_ms_stats": None,
-                        "total_decode_latency_ms": None,
-                        "tokens_per_sec": None,
-                        "effective_TFLOPS_prefill": None,
-                        "effective_TFLOPS_decode": None,
-                        "peak_rss_mb": float(process.memory_info().rss / (1024.0 * 1024.0)),
-                        "status": "error",
-                        "errors": {
-                            "stage": f"warmup_{warmup_idx}",
-                            **err,
-                        },
-                        "error_type": err["type"],
-                        "error_message": err["message"],
-                        "traceback_summary": err["traceback_summary"],
-                    }
-                    out.write(json.dumps(record) + "\n")
+                    err["stage"] = f"warmup_{warmup_idx}"
+                    out.write(json.dumps(error_record(base, process, err, run_index=None)) + "\n")
                     out.flush()
                     print(
                         "scenario failed during warmup "
@@ -350,22 +443,7 @@ def main() -> int:
                     }
                 except Exception as exc:
                     err = parse_error(exc)
-                    record = {
-                        **base,
-                        "run_index": run_idx,
-                        "prefill_latency_ms": None,
-                        "decode_step_latency_ms_stats": None,
-                        "total_decode_latency_ms": None,
-                        "tokens_per_sec": None,
-                        "effective_TFLOPS_prefill": None,
-                        "effective_TFLOPS_decode": None,
-                        "peak_rss_mb": float(process.memory_info().rss / (1024.0 * 1024.0)),
-                        "status": "error",
-                        "errors": err,
-                        "error_type": err["type"],
-                        "error_message": err["message"],
-                        "traceback_summary": err["traceback_summary"],
-                    }
+                    record = error_record(base, process, err, run_index=run_idx)
 
                 out.write(json.dumps(record) + "\n")
                 out.flush()

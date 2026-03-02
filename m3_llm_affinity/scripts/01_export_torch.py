@@ -5,13 +5,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 import numpy as np
 import torch
 import yaml
 from transformers import AutoConfig, AutoModelForCausalLM
+
+from lib_paths import default_model_alias, torch_paths
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -121,6 +124,18 @@ def read_model_meta(cfg: Any) -> Dict[str, int]:
     }
 
 
+def get_max_positions(cfg: Any) -> int:
+    candidates = [
+        getattr(cfg, "n_positions", None),
+        getattr(cfg, "max_position_embeddings", None),
+        getattr(cfg, "max_sequence_length", None),
+    ]
+    for value in candidates:
+        if value is not None:
+            return int(value)
+    return 0
+
+
 def trace_or_script(
     module: torch.nn.Module,
     example_inputs: Tuple[torch.Tensor, ...],
@@ -149,29 +164,76 @@ def trace_or_script(
             return "script"
 
 
+def resolve_context_len(raw_cfg: Dict[str, Any], override: int | None) -> int:
+    if override is not None:
+        return int(override)
+
+    context_len = int(raw_cfg["context_len"])
+    cfg_prefill = raw_cfg.get("prefill_len")
+    if cfg_prefill is not None and int(cfg_prefill) != context_len - 1:
+        raise ValueError("prefill_len must equal context_len - 1")
+    return context_len
+
+
+def resolve_model_id(raw_cfg: Dict[str, Any], override: str | None) -> str:
+    if override:
+        return str(override)
+    return str(raw_cfg["hf_model_id"])
+
+
+def resolve_hf_token(hf_token_env: str | None) -> str | None:
+    if hf_token_env:
+        token = os.getenv(hf_token_env)
+        if token:
+            return token
+    return os.getenv("HF_TOKEN")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/default.yaml")
+    parser.add_argument("--context-len", type=int)
+    parser.add_argument("--model-id")
+    parser.add_argument("--variant-dir")
+    parser.add_argument("--hf-token-env")
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--batch-size", type=int)
     args = parser.parse_args()
 
     cfg_path = (ROOT / args.config).resolve()
     cfg = load_yaml(cfg_path)
 
-    hf_model_id = str(cfg["hf_model_id"])
-    context_len = int(cfg["context_len"])
-    prefill_len = int(cfg["prefill_len"])
-    batch_size = int(cfg["batch_size"])
-    seed = int(cfg["seed"])
+    hf_model_id = resolve_model_id(cfg, args.model_id)
+    context_len = resolve_context_len(cfg, args.context_len)
+    prefill_len = int(context_len - 1)
+    batch_size = int(args.batch_size if args.batch_size is not None else cfg.get("batch_size", 1))
+    seed = int(args.seed if args.seed is not None else cfg.get("seed", 1337))
 
     if batch_size != 1:
         raise ValueError("This suite currently supports batch_size=1 only.")
-    if prefill_len != context_len - 1:
-        raise ValueError("prefill_len must equal context_len - 1.")
 
-    artifacts_torch = ROOT / "artifacts" / "torch"
-    artifacts_torch.mkdir(parents=True, exist_ok=True)
+    use_legacy_layout = args.variant_dir is None
+    path_map = torch_paths(
+        model_id=hf_model_id,
+        context_len=context_len,
+        variant_dir=args.variant_dir,
+        legacy=use_legacy_layout,
+    )
 
-    model_cfg = AutoConfig.from_pretrained(hf_model_id)
+    path_map["prefill_pt"].parent.mkdir(parents=True, exist_ok=True)
+    path_map["decode_pt"].parent.mkdir(parents=True, exist_ok=True)
+    path_map["model_meta_json"].parent.mkdir(parents=True, exist_ok=True)
+
+    hf_token_env = args.hf_token_env or cfg.get("hf_token_env")
+    token = resolve_hf_token(hf_token_env)
+
+    model_cfg = AutoConfig.from_pretrained(hf_model_id, token=token)
+    max_positions = get_max_positions(model_cfg)
+    if max_positions and context_len > max_positions:
+        raise ValueError(
+            f"context_len={context_len} exceeds model max positions={max_positions} for {hf_model_id}"
+        )
+
     meta = read_model_meta(model_cfg)
 
     rng = np.random.default_rng(seed)
@@ -180,7 +242,7 @@ def main() -> int:
     )
     example_prefill_mask = torch.ones((1, prefill_len), dtype=torch.int64)
 
-    model = AutoModelForCausalLM.from_pretrained(hf_model_id)
+    model = AutoModelForCausalLM.from_pretrained(hf_model_id, token=token)
     model.eval()
     # Keep export weights in fp32 for robust Torch->Core ML conversion.
     # Wrapper outputs and converted compute precision are still float16.
@@ -223,8 +285,8 @@ def main() -> int:
     example_decode_mask = torch.ones((1, prefill_len + 1), dtype=torch.int64)
     example_position_id = torch.tensor([[prefill_len]], dtype=torch.int64)
 
-    prefill_path = artifacts_torch / "prefill.pt"
-    decode_path = artifacts_torch / "decode.pt"
+    prefill_path = path_map["prefill_pt"]
+    decode_path = path_map["decode_pt"]
 
     prefill_method = trace_or_script(
         prefill_wrapper,
@@ -246,17 +308,27 @@ def main() -> int:
     meta_payload: Dict[str, Any] = {
         **meta,
         "hf_model_id": hf_model_id,
+        "model_alias": default_model_alias(hf_model_id),
         "context_len": context_len,
         "prefill_len": prefill_len,
         "batch_size": batch_size,
+        "max_positions": max_positions,
         "torchscript_prefill_method": prefill_method,
         "torchscript_decode_method": decode_method,
         "export_weight_dtype": weight_dtype,
+        "variant_dir": str(path_map["model_meta_json"].parent),
     }
 
-    meta_path = ROOT / "artifacts" / "model_meta.json"
+    meta_path = path_map["model_meta_json"]
     with meta_path.open("w", encoding="utf-8") as handle:
         json.dump(meta_payload, handle, indent=2, sort_keys=True)
+
+    if use_legacy_layout:
+        # Backward-compatible location used by earlier tooling.
+        legacy_meta = ROOT / "artifacts" / "model_meta.json"
+        legacy_meta.parent.mkdir(parents=True, exist_ok=True)
+        with legacy_meta.open("w", encoding="utf-8") as handle:
+            json.dump(meta_payload, handle, indent=2, sort_keys=True)
 
     print(f"saved: {prefill_path}")
     print(f"saved: {decode_path}")

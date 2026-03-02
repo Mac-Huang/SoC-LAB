@@ -1,0 +1,55 @@
+suite:
+  out_dir: "results"
+  reports_dir: "reports/analysis"
+  pick_latest_n_jsonl: 50
+
+tasks:
+  - task_type: "llm_decode"
+    enabled: true
+    models:
+      - model_id: "openai-community/gpt2"
+        model_alias: "gpt2"
+      - model_id: "meta-llama/Llama-3.1-8B-Instruct"
+        model_alias: "llama31_8b"
+        hf_token_env: "HF_TOKEN"
+    sweep:
+      context_len_start: 64
+      context_len_max: 4096
+      doubling_steps: 6
+      gen_tokens: 32
+      batch_size: 1
+      runs: 10
+      warmup: 2
+      seed: 1337
+    compute_units:
+      whole: ["CPU_ONLY", "CPU_AND_GPU", "CPU_AND_NE", "ALL"]
+      split:
+        - {prefill: "CPU_AND_NE", decode: "CPU_AND_GPU"}
+        - {prefill: "CPU_AND_GPU", decode: "CPU_AND_NE"}
+
+  - task_type: "diffusion_sd15"
+    enabled: false
+    model_alias: "sd15"
+    sweep:
+      steps_list: [10, 20, 30, 50]
+      image_size: 512
+      runs: 5
+      warmup: 1
+    compute_units:
+      stages:
+        - {text_encoder: "CPU_AND_NE", unet: "CPU_AND_GPU", vae: "CPU_AND_GPU"}
+        - {text_encoder: "CPU_AND_GPU", unet: "CPU_AND_NE", vae: "CPU_AND_GPU"}
+        - {text_encoder: "ALL", unet: "ALL", vae: "ALL"}
+
+  - task_type: "speech_owsm"
+    enabled: false
+    model_alias: "owsm_v31"
+    sweep:
+      audio_seconds_list: [5, 10, 20, 40]
+      runs: 5
+      warmup: 1
+    compute_units:
+      stages:
+        - {encoder: "CPU_AND_NE", decoder: "CPU_AND_GPU"}
+        - {encoder: "CPU_AND_GPU", decoder: "CPU_AND_NE"}
+        - {encoder: "ALL", decoder: "ALL"}

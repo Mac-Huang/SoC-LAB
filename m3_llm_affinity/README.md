@@ -1,211 +1,174 @@
 # m3_llm_affinity
 
-Small, reproducible Core ML experiment suite for one model class only: decoder-only language models (GPT-style), targeted at Apple Silicon macOS.
-
-Default setup is intentionally small:
-- Model: `openai-community/gpt2`
-- Context length: `64`
-- Batch size: `1`
+Reproducible Core ML affinity suite focused on static-shape benchmarks, starting with decoder-only LLMs and extensible to optional task families.
 
 ## What This Measures
 
-1. Whole-model compute units:
-- `CPU_ONLY`
-- `CPU_AND_GPU`
-- `CPU_AND_NE`
-- `ALL`
+Primary task (`llm_decode`):
 
-2. Stage split compute units:
-- Prefill and decode loaded with different compute units.
-
-3. MLComputePlan op-level affinity:
-- Preferred/supported devices per operation.
-- Estimated per-op cost.
-
+1. Whole-model compute unit placement (`CPU_ONLY`, `CPU_AND_GPU`, `CPU_AND_NE`, `ALL`)
+2. Stage split placement (prefill vs decode)
+3. MLComputePlan per-op preferred/supported devices + estimated cost
 4. Performance metrics:
-- Prefill latency
-- Decode latency statistics and tokens/s
-- Effective TFLOPS (approximate FLOP model)
-- Peak RSS memory
+   - `prefill_latency_ms`
+   - decode TPOT (`tpot_ms_mean`, `tpot_ms_p95`)
+   - `first_decode_step_ms`
+   - `ttft_ms`
+   - `tokens_per_sec`
+   - effective TFLOPS (prefill/decode)
+   - `peak_rss_mb`
 
-## Determinism and Scope
+The suite is failure-tolerant: failures are recorded as data rows (`status=error`) and execution continues.
 
-- Tokenizer time is excluded.
-- Prompt tokens are generated directly as deterministic integer IDs (`seed` in config).
-- Prefill/decode use fixed shapes with a sliding-window KV-cache approximation.
-- This suite is for hardware affinity behavior, not text quality.
+## Backward-Compatible Pipeline
 
-## Project Layout
-
-- `configs/default.yaml`
-- `scripts/00_env_check.py`
-- `scripts/01_export_torch.py`
-- `scripts/02_convert_coreml.py`
-- `scripts/03_bench.py`
-- `scripts/04_computeplan_dump.py`
-- `scripts/05_flops.py`
-- `scripts/06_optional_powermetrics_instructions.md`
-- `scripts/07_analyze_results.py`
-- `models/` (generated)
-- `artifacts/` (generated)
-- `results/` (generated)
-- `reports/` (generated)
-
-## Exact Commands
+Existing single-model workflow still works:
 
 ```bash
 make setup
 make convert
 make bench
 make plan
-make analyze
 ```
 
-Single-command setup and run:
+Single command:
 
 ```bash
-make setup && make convert && make bench && make plan && make analyze
+make setup && make convert && make bench && make plan
 ```
 
-## Make Targets
+## New Suite Runner
 
-- `make setup`
-  - creates `.venv`
-  - installs pinned dependencies from `requirements.txt`
+Run full suite config:
 
-- `make convert`
-  - runs env check
-  - exports TorchScript wrappers
-  - converts to Core ML ML Program models
-  - validates one CPU-only predict per model
+```bash
+make suite
+```
 
-- `make bench`
-  - whole mode across all configured compute units
-  - split mode for:
-    - prefill `CPU_AND_NE`, decode `CPU_AND_GPU`
-    - prefill `CPU_AND_GPU`, decode `CPU_AND_NE`
+LLM-only convenience target:
 
-- `make plan`
-  - compiles `.mlpackage` to `.mlmodelc`
-  - dumps compute-plan CSVs and summary JSON
-  - tries `xcrun coremlc compile` first and falls back to `coremltools.utils.compile_model` if `coremlc` is unavailable
+```bash
+make suite-llm
+```
 
-- `make analyze`
-  - aggregates latest benchmark JSONL files
-  - generates plots and a compact analysis summary
+Direct invocation examples:
 
-- `make clean`
-  - removes generated artifacts and venv
+```bash
+python scripts/08_run_suite.py --suite-config configs/suite.yaml
+python scripts/08_run_suite.py --suite-config configs/suite.yaml --only-task llm_decode
+python scripts/08_run_suite.py --suite-config configs/suite.yaml --only-task llm_decode --only-model gpt2
+python scripts/08_run_suite.py --suite-config configs/suite.yaml --dry-run
+```
 
-## Expected Generated Files
+## Configs
 
-After `make convert`:
-- `artifacts/torch/prefill.pt`
-- `artifacts/torch/decode.pt`
-- `artifacts/model_meta.json`
-- `models/prefill.mlpackage`
-- `models/decode.mlpackage`
+- `configs/default.yaml`: legacy/default single-context config (kept for compatibility)
+- `configs/sweep_ctx.yaml`: existing context sweep config
+- `configs/suite.yaml`: new multi-task suite schema
 
-After `make bench`:
-- `results/<timestamp>_bench.jsonl`
+### `configs/suite.yaml` Highlights
 
-After `make plan`:
-- `artifacts/compiled/prefill.mlmodelc`
-- `artifacts/compiled/decode.mlmodelc`
+- LLM sweep uses doubling schedule (`context_len_start`, `doubling_steps`, `context_len_max`)
+- Supports multiple models (default includes GPT-2 and Llama 3.1 8B Instruct)
+- Optional HF auth env per model (`hf_token_env`)
+- Optional task families:
+  - `diffusion_sd15` (safe stub)
+  - `speech_owsm` (safe stub)
+
+Optional tasks are non-blocking and emit one structured skip/error row when disabled or not available.
+
+## Artifact Layout
+
+### Variant artifacts (suite mode)
+
+Per `(model_id, context_len)` variant:
+
+- `artifacts/variants/<model_slug>/ctx<context_len>/torch/prefill.pt`
+- `artifacts/variants/<model_slug>/ctx<context_len>/torch/decode.pt`
+- `artifacts/variants/<model_slug>/ctx<context_len>/model_meta.json`
+
+### Core ML artifacts
+
+- `models/<model_slug>/ctx<context_len>/prefill.mlpackage`
+- `models/<model_slug>/ctx<context_len>/decode.mlpackage`
+
+### Compute plan outputs
+
+- `reports/computeplan_<model_alias>_ctx<context_len>_prefill.csv`
+- `reports/computeplan_<model_alias>_ctx<context_len>_decode.csv`
+- `reports/computeplan_<model_alias>_ctx<context_len>_summary.json`
+
+Backward-compatible fixed report names are still written:
+
 - `reports/computeplan_prefill.csv`
 - `reports/computeplan_decode.csv`
 - `reports/computeplan_summary.json`
 
-After `make analyze`:
-- `reports/analysis/latest_summary.csv`
-- `reports/analysis/latest_summary.md`
-- `reports/analysis/figures/decode_tokens_per_sec.png`
-- `reports/analysis/figures/latency_breakdown.png`
-- `reports/analysis/figures/peak_rss_mb.png`
+## Results Files
 
-## Result Format (Benchmark JSONL)
+Suite run writes one bench JSONL per model/context:
 
-Each line is one run record, including:
-- `model_id`, `context_len`, `prefill_len`, `gen_tokens`
-- `mode`, `prefill_compute_units`, `decode_compute_units`
-- `prefill_latency_ms`
-- `decode_step_latency_ms_stats` (`mean`, `median`, `p95`)
-- `total_decode_latency_ms`
-- `tokens_per_sec`
-- `effective_TFLOPS_prefill`, `effective_TFLOPS_decode`
-- `peak_rss_mb`
-- `status` and `errors` if failures occur
+- `results/<timestamp>_<model_alias>_ctx<context_len>_bench.jsonl`
 
-## Interpreting CPU_AND_NE
+Each JSONL includes:
 
-`CPU_AND_NE` may:
-- compile and run,
-- partially fall back,
-- or fail for specific models/shapes.
+- identifiers: `timestamp`, `model_id`, `model_alias`, `variant_id`, `context_len`, `prefill_len`
+- scenario: `mode`, `prefill_compute_units`, `decode_compute_units`
+- latency/throughput: `prefill_latency_ms`, `first_decode_step_ms`, `tpot_ms_mean`, `tpot_ms_p95`, `ttft_ms`, `total_decode_latency_ms`, `tokens_per_sec`
+- compute/memory: `effective_TFLOPS_prefill`, `effective_TFLOPS_decode`, `peak_rss_mb`
+- status/errors: `status`, `error_type`, `error_message`, `traceback_summary`, `errors`
 
-This suite treats those outcomes as data. Failures are captured in JSONL and the run continues with other configurations.
+## Analysis and Visualization
 
-## Experiment Goal and Design
+Run suite analysis:
 
-Goal: isolate how Core ML hardware affinity behaves for one decoder-only model class on Apple M3, across runtime compute-unit choices and stage splits.
+```bash
+make analyze-suite
+```
 
-Design choices:
-- One model class only: causal decoder-only (`openai-community/gpt2` by default).
-- Static-shape inference to reduce compiler/runtime variability:
-  - prefill length fixed to `context_len - 1`
-  - decode uses fixed `(1,1)` token input and fixed-shape KV cache tensors
-  - sliding-window KV truncation keeps decode shapes constant each step
-- Deterministic prompt tokens from a fixed RNG seed; tokenizer cost is excluded.
-- Per-run metrics capture:
-  - prefill latency
-  - decode throughput and step latency stats
-  - effective TFLOPS from the same FLOP model across all scenarios
-  - peak RSS
-- Device-affinity introspection is done separately with `MLComputePlan` op-level preferred/supported device dumps.
+Or:
 
-## Latest Analysis (March 1, 2026)
+```bash
+python scripts/07_analyze_results.py --suite-config configs/suite.yaml
+```
 
-Source files:
-- `results/20260301_002348_bench.jsonl` (whole mode)
-- `results/20260301_002431_bench.jsonl` (split NE->GPU)
-- `results/20260301_002445_bench.jsonl` (split GPU->NE)
+By default, analysis loads the latest `N` `*_bench.jsonl` files from `results/` (`N` from `suite.pick_latest_n_jsonl`, default `50`).
 
-Aggregated (20 runs/scenario):
+Outputs in `reports/analysis/`:
 
-| Scenario | Prefill Latency ms (mean) | Total Decode ms (mean) | Decode tok/s (mean) | Decode tok/s 95% CI |
-| --- | ---: | ---: | ---: | ---: |
-| split: CPU_AND_GPU -> CPU_AND_NE | 20.080 | 215.856 | 148.254 | +/- 0.467 |
-| whole: CPU_ONLY | 10.397 | 217.437 | 147.173 | +/- 0.328 |
-| whole: CPU_AND_NE | 5.418 | 218.368 | 146.564 | +/- 0.807 |
-| whole: CPU_AND_GPU | 28.289 | 233.475 | 137.101 | +/- 1.065 |
-| whole: ALL | 5.235 | 283.212 | 113.014 | +/- 0.750 |
-| split: CPU_AND_NE -> CPU_AND_GPU | 5.225 | 323.491 | 99.876 | +/- 4.496 |
+1. `latest_summary.csv`
+2. `latest_summary.json`
+3. `latest_summary.md`
+4. Per-model grouped-bar figures:
+   - `fig_<model>_ttft_ms.png`
+   - `fig_<model>_tokens_per_sec.png`
+   - `fig_<model>_tflops_prefill.png`
+   - `fig_<model>_tflops_decode.png`
+   - `fig_<model>_peak_rss_mb.png`
+5. Combined figure:
+   - `fig_all_models_ttft_vs_throughput.png`
 
-### Graphs
+### Inspect Summary CSV Quickly
 
-Decode throughput:
+```bash
+python - <<'PY'
+import pandas as pd
+from pathlib import Path
+p = Path('reports/analysis/latest_summary.csv')
+print(p.resolve())
+print(pd.read_csv(p).head(20).to_string(index=False))
+PY
+```
 
-![Decode throughput](reports/analysis/figures/decode_tokens_per_sec.png)
+## Context Length Limits
 
-Latency breakdown:
+The suite checks max supported context positions from HF config (`n_positions`, `max_position_embeddings`, etc.).
 
-![Latency breakdown](reports/analysis/figures/latency_breakdown.png)
-
-Peak RSS:
-
-![Peak RSS](reports/analysis/figures/peak_rss_mb.png)
-
-## Higher-Level Results
-
-- For this small GPT-2 setup (`context_len=64`, `gen_tokens=32`), decode-stage placement dominates end-to-end throughput more than prefill speed.
-- Best throughput came from `split: CPU_AND_GPU -> CPU_AND_NE` (decode on NE), only slightly above `whole: CPU_ONLY` and `whole: CPU_AND_NE`.
-- Fast prefill alone is not enough: `split: CPU_AND_NE -> CPU_AND_GPU` has fast prefill but worst decode throughput.
-- `whole: ALL` underperformed materially versus targeted CU settings, indicating extra scheduling/fallback overhead for this workload size.
-- Compute-plan evidence aligns with stage behavior:
-  - prefill includes many NE-preferred ops (346)
-  - decode includes many GPU-preferred ops (423)
-  - but measured decode throughput still favored NE/CPU placements for this exact model and shape regime.
+- Contexts beyond max positions are skipped with a clear error row.
+- If export/convert fails with hard failures (`OOM`, `model_compile_fail`, `coreml_convert_fail`), the runner stops larger contexts for that model.
 
 ## Optional Power Logging
 
-See `scripts/06_optional_powermetrics_instructions.md` for manual `powermetrics` / `asitop` usage.
+Manual only (no sudo automation in scripts):
+
+- `scripts/06_optional_powermetrics_instructions.md`
