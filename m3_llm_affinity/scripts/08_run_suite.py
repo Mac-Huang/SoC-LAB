@@ -15,12 +15,13 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 import yaml
 from transformers import AutoConfig
 
-from lib_paths import default_model_alias, llm_variant_dir, results_prefix, slugify_model_id
+from lib_paths import default_model_alias, llm_variant_dir, slugify_model_id
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG_FOR_SUBSCRIPTS = "configs/default.yaml"
-
 HARD_FAIL_TYPES = {"OOM", "model_compile_fail", "coreml_convert_fail"}
+ALLOWED_LLM_WHOLE = ("CPU_AND_NE", "ALL")
+ALLOWED_LLM_SPLIT = (("CPU_AND_NE", "CPU_AND_GPU"),)
 
 
 def load_yaml(path: Path) -> Dict[str, Any]:
@@ -59,13 +60,15 @@ def build_context_schedule(start: int, max_len: int, doubling_steps: int) -> Lis
 
 
 def classify_failure(message: str) -> str:
-    text = message.lower()
+    text = str(message).lower()
     if "out of memory" in text or "oom" in text:
         return "OOM"
     if "coreml" in text and ("convert" in text or "mlprogram" in text):
         return "coreml_convert_fail"
     if "coremlc" in text or "mlmodelc" in text or "compile" in text:
         return "model_compile_fail"
+    if "token" in text and ("hf" in text or "hugging" in text or "401" in text or "gated" in text):
+        return "missing_hf_token"
     return "runtime_error"
 
 
@@ -92,9 +95,18 @@ def append_jsonl(path: Path, record: Dict[str, Any]) -> None:
         handle.write(json.dumps(record) + "\n")
 
 
+def append_jsonl_many(path: Path, records: Iterable[Dict[str, Any]]) -> int:
+    n = 0
+    for record in records:
+        append_jsonl(path, record)
+        n += 1
+    return n
+
+
 def append_error_record(
     result_path: Path,
     *,
+    task_type: str,
     model_id: str,
     model_alias: str,
     context_len: Optional[int],
@@ -104,16 +116,20 @@ def append_error_record(
     mode: Optional[str] = None,
     prefill_cu: Optional[str] = None,
     decode_cu: Optional[str] = None,
+    x_label: Optional[str] = None,
+    x_value: Optional[float] = None,
+    uses_coreml: Optional[bool] = None,
 ) -> None:
     ctx = int(context_len) if context_len is not None else None
     prefill_len = int(ctx - 1) if ctx is not None else None
     variant_id = None
-    if ctx is not None:
+    if ctx is not None and task_type == "llm_decode":
         variant_id = f"{slugify_model_id(model_id)}/ctx{ctx}"
 
     failure = failure_type or classify_failure(message)
     record = {
         "timestamp": dt.datetime.now().isoformat(),
+        "task_type": task_type,
         "model_id": model_id,
         "model_alias": model_alias,
         "variant_id": variant_id,
@@ -123,6 +139,12 @@ def append_error_record(
         "mode": mode,
         "prefill_compute_units": prefill_cu,
         "decode_compute_units": decode_cu,
+        "scenario_label": None,
+        "x_label": x_label,
+        "x_value": x_value,
+        "primary_latency_ms": None,
+        "primary_throughput": None,
+        "uses_coreml": uses_coreml,
         "prefill_latency_ms": None,
         "decode_step_latency_ms_stats": None,
         "first_decode_step_ms": None,
@@ -148,12 +170,56 @@ def append_error_record(
     append_jsonl(result_path, record)
 
 
+def sweep_dir_for(out_dir: Path, task_type: str, model_alias: str, sweep_id: str) -> Path:
+    return out_dir / task_type / model_alias / f"sweep_{sweep_id}"
+
+
+def llm_result_path_for(
+    out_dir: Path,
+    model_alias: str,
+    sweep_id: str,
+    context_len: int,
+) -> Path:
+    return sweep_dir_for(out_dir, "llm_decode", model_alias, sweep_id) / f"ctx{int(context_len)}_bench.jsonl"
+
+
+def task_result_path_for(
+    out_dir: Path,
+    task_type: str,
+    model_alias: str,
+    sweep_id: str,
+) -> Path:
+    return sweep_dir_for(out_dir, task_type, model_alias, sweep_id) / f"{task_type}_bench.jsonl"
+
+
+def _normalize_split_pairs(raw_pairs: Iterable[Dict[str, Any]]) -> List[Tuple[str, str]]:
+    out: List[Tuple[str, str]] = []
+    for pair in raw_pairs:
+        out.append((str(pair["prefill"]), str(pair["decode"])))
+    return out
+
+
+def validate_llm_mode_policy(whole_cus: Iterable[str], split_pairs: Iterable[Dict[str, Any]]) -> None:
+    whole_set = set(str(x) for x in whole_cus)
+    split_set = set(_normalize_split_pairs(split_pairs))
+    allowed_whole_set = set(ALLOWED_LLM_WHOLE)
+    allowed_split_set = set(ALLOWED_LLM_SPLIT)
+
+    if whole_set != allowed_whole_set or split_set != allowed_split_set:
+        raise ValueError(
+            "llm_decode compute_units must be exactly "
+            f"whole={list(ALLOWED_LLM_WHOLE)} and split={list(ALLOWED_LLM_SPLIT)}; "
+            f"got whole={sorted(whole_set)} split={sorted(split_set)}"
+        )
+
+
 def run_llm_task(
     task_cfg: Dict[str, Any],
     out_dir: Path,
     timestamp: str,
     only_model: Optional[str],
     dry_run: bool,
+    skip_convert: bool,
 ) -> None:
     sweep_cfg = task_cfg.get("sweep", {})
     compute_cfg = task_cfg.get("compute_units", {})
@@ -167,8 +233,9 @@ def run_llm_task(
     warmup = int(sweep_cfg.get("warmup", 2))
     seed = int(sweep_cfg.get("seed", 1337))
 
-    whole_cus = [str(x) for x in compute_cfg.get("whole", ["CPU_ONLY", "CPU_AND_GPU", "CPU_AND_NE", "ALL"])]
+    whole_cus = [str(x) for x in compute_cfg.get("whole", list(ALLOWED_LLM_WHOLE))]
     split_pairs = compute_cfg.get("split", [])
+    validate_llm_mode_policy(whole_cus, split_pairs)
 
     contexts = build_context_schedule(
         start=context_len_start,
@@ -188,6 +255,28 @@ def run_llm_task(
         token = None
         if hf_token_env:
             token = os.getenv(str(hf_token_env))
+            if not token:
+                missing_token_path = llm_result_path_for(
+                    out_dir=out_dir,
+                    model_alias=model_alias,
+                    sweep_id=timestamp,
+                    context_len=0,
+                )
+                append_error_record(
+                    missing_token_path,
+                    task_type="llm_decode",
+                    model_id=model_id,
+                    model_alias=model_alias,
+                    context_len=None,
+                    stage="token_check",
+                    message=f"Missing required env var '{hf_token_env}' for model {model_id}",
+                    failure_type="missing_hf_token",
+                    x_label="context_len",
+                    uses_coreml=True,
+                )
+                print(f"[{model_alias}] missing required token env: {hf_token_env}; skipping model")
+                continue
+
         if token is None:
             token = os.getenv("HF_TOKEN")
 
@@ -195,74 +284,164 @@ def run_llm_task(
             model_conf = AutoConfig.from_pretrained(model_id, token=token)
             max_positions = get_max_positions(model_conf)
         except Exception as exc:
-            result_path = out_dir / f"{timestamp}_{results_prefix(model_alias, 0)}_bench.jsonl"
+            result_path = llm_result_path_for(
+                out_dir=out_dir,
+                model_alias=model_alias,
+                sweep_id=timestamp,
+                context_len=0,
+            )
             append_error_record(
                 result_path,
+                task_type="llm_decode",
                 model_id=model_id,
                 model_alias=model_alias,
                 context_len=None,
                 stage="load_hf_config",
                 message=f"{type(exc).__name__}: {exc}",
                 failure_type="hf_config_load_fail",
+                x_label="context_len",
+                uses_coreml=True,
             )
             print(f"[{model_alias}] failed to load HF config: {exc}")
             continue
+
+        allow_weight_quant = bool(model_cfg.get("allow_weight_quant", False))
+        weight_quant_mode = str(model_cfg.get("weight_quant_mode", "int4"))
 
         stop_on_hard_fail = False
         for ctx in contexts:
             if stop_on_hard_fail:
                 break
 
-            result_path = out_dir / f"{timestamp}_{results_prefix(model_alias, ctx)}_bench.jsonl"
+            result_path = llm_result_path_for(
+                out_dir=out_dir,
+                model_alias=model_alias,
+                sweep_id=timestamp,
+                context_len=ctx,
+            )
             variant_dir = llm_variant_dir(model_id=model_id, context_len=ctx)
 
             if max_positions and ctx > max_positions:
-                msg = (
-                    f"context_len={ctx} exceeds model max positions={max_positions} for {model_id}; skipping"
-                )
+                msg = f"context_len={ctx} exceeds model max positions={max_positions} for {model_id}; skipping"
                 append_error_record(
                     result_path,
+                    task_type="llm_decode",
                     model_id=model_id,
                     model_alias=model_alias,
                     context_len=ctx,
                     stage="context_check",
                     message=msg,
                     failure_type="context_exceeds_max_positions",
+                    x_label="context_len",
+                    x_value=float(ctx),
+                    uses_coreml=True,
                 )
                 print(f"[{model_alias} ctx{ctx}] {msg}")
                 continue
 
-            export_cmd = [
-                sys.executable,
-                "scripts/01_export_torch.py",
-                "--config",
-                DEFAULT_CONFIG_FOR_SUBSCRIPTS,
-                "--model-id",
-                model_id,
-                "--context-len",
-                str(ctx),
-                "--variant-dir",
-                str(variant_dir),
-                "--batch-size",
-                str(batch_size),
-                "--seed",
-                str(seed),
-            ]
-            if hf_token_env:
-                export_cmd.extend(["--hf-token-env", str(hf_token_env)])
+            model_prefill = ROOT / "models" / slugify_model_id(model_id) / f"ctx{ctx}" / "prefill.mlpackage"
+            model_decode = ROOT / "models" / slugify_model_id(model_id) / f"ctx{ctx}" / "decode.mlpackage"
+            models_exist = model_prefill.exists() and model_decode.exists()
 
-            convert_cmd = [
-                sys.executable,
-                "scripts/02_convert_coreml.py",
-                "--config",
-                DEFAULT_CONFIG_FOR_SUBSCRIPTS,
-                "--model-id",
-                model_id,
-                "--context-len",
-                str(ctx),
-                "--variant-dir",
-                str(variant_dir),
-            ]
+            need_convert = not (skip_convert and models_exist)
+            if skip_convert and not models_exist:
+                append_error_record(
+                    result_path,
+                    task_type="llm_decode",
+                    model_id=model_id,
+                    model_alias=model_alias,
+                    context_len=ctx,
+                    stage="convert",
+                    message=(
+                        "--skip-convert was set but Core ML packages are missing at "
+                        f"{model_prefill.parent}. Provide BYO mlpackage artifacts or rerun without --skip-convert."
+                    ),
+                    failure_type="missing_asset",
+                    x_label="context_len",
+                    x_value=float(ctx),
+                    uses_coreml=True,
+                )
+                continue
+
+            if need_convert:
+                export_cmd = [
+                    sys.executable,
+                    "scripts/01_export_torch.py",
+                    "--config",
+                    DEFAULT_CONFIG_FOR_SUBSCRIPTS,
+                    "--model-id",
+                    model_id,
+                    "--context-len",
+                    str(ctx),
+                    "--variant-dir",
+                    str(variant_dir),
+                    "--batch-size",
+                    str(batch_size),
+                    "--seed",
+                    str(seed),
+                ]
+                if hf_token_env:
+                    export_cmd.extend(["--hf-token-env", str(hf_token_env)])
+
+                convert_cmd = [
+                    sys.executable,
+                    "scripts/02_convert_coreml.py",
+                    "--config",
+                    DEFAULT_CONFIG_FOR_SUBSCRIPTS,
+                    "--model-id",
+                    model_id,
+                    "--context-len",
+                    str(ctx),
+                    "--variant-dir",
+                    str(variant_dir),
+                ]
+                if allow_weight_quant:
+                    convert_cmd.append("--allow-weight-quant")
+                    convert_cmd.extend(["--weight-quant-mode", weight_quant_mode])
+
+                print(f"[{model_alias} ctx{ctx}] export")
+                ok, out = run_command(export_cmd, ROOT, dry_run=dry_run)
+                if not ok:
+                    failure_type = classify_failure(out)
+                    append_error_record(
+                        result_path,
+                        task_type="llm_decode",
+                        model_id=model_id,
+                        model_alias=model_alias,
+                        context_len=ctx,
+                        stage="export",
+                        message=out,
+                        failure_type=failure_type,
+                        x_label="context_len",
+                        x_value=float(ctx),
+                        uses_coreml=True,
+                    )
+                    print(out)
+                    if failure_type in HARD_FAIL_TYPES:
+                        stop_on_hard_fail = True
+                    continue
+
+                print(f"[{model_alias} ctx{ctx}] convert")
+                ok, out = run_command(convert_cmd, ROOT, dry_run=dry_run)
+                if not ok:
+                    failure_type = classify_failure(out)
+                    append_error_record(
+                        result_path,
+                        task_type="llm_decode",
+                        model_id=model_id,
+                        model_alias=model_alias,
+                        context_len=ctx,
+                        stage="convert",
+                        message=out,
+                        failure_type=failure_type,
+                        x_label="context_len",
+                        x_value=float(ctx),
+                        uses_coreml=True,
+                    )
+                    print(out)
+                    if failure_type in HARD_FAIL_TYPES:
+                        stop_on_hard_fail = True
+                    continue
 
             plan_cmd = [
                 sys.executable,
@@ -278,54 +457,21 @@ def run_llm_task(
                 "--variant-dir",
                 str(variant_dir),
             ]
-
-            print(f"[{model_alias} ctx{ctx}] export")
-            ok, out = run_command(export_cmd, ROOT, dry_run=dry_run)
-            if not ok:
-                failure_type = classify_failure(out)
-                append_error_record(
-                    result_path,
-                    model_id=model_id,
-                    model_alias=model_alias,
-                    context_len=ctx,
-                    stage="export",
-                    message=out,
-                    failure_type=failure_type,
-                )
-                print(out)
-                if failure_type in HARD_FAIL_TYPES:
-                    stop_on_hard_fail = True
-                continue
-
-            print(f"[{model_alias} ctx{ctx}] convert")
-            ok, out = run_command(convert_cmd, ROOT, dry_run=dry_run)
-            if not ok:
-                failure_type = classify_failure(out)
-                append_error_record(
-                    result_path,
-                    model_id=model_id,
-                    model_alias=model_alias,
-                    context_len=ctx,
-                    stage="convert",
-                    message=out,
-                    failure_type=failure_type,
-                )
-                print(out)
-                if failure_type in HARD_FAIL_TYPES:
-                    stop_on_hard_fail = True
-                continue
-
             print(f"[{model_alias} ctx{ctx}] compute plan")
             ok, out = run_command(plan_cmd, ROOT, dry_run=dry_run)
             if not ok:
                 append_error_record(
                     result_path,
+                    task_type="llm_decode",
                     model_id=model_id,
                     model_alias=model_alias,
                     context_len=ctx,
                     stage="computeplan",
                     message=out,
                     failure_type=classify_failure(out),
+                    x_label="context_len",
+                    x_value=float(ctx),
+                    uses_coreml=True,
                 )
                 print(out)
 
@@ -363,6 +509,7 @@ def run_llm_task(
                 if not ok:
                     append_error_record(
                         result_path,
+                        task_type="llm_decode",
                         model_id=model_id,
                         model_alias=model_alias,
                         context_len=ctx,
@@ -372,6 +519,9 @@ def run_llm_task(
                         mode="whole",
                         prefill_cu=cu,
                         decode_cu=cu,
+                        x_label="context_len",
+                        x_value=float(ctx),
+                        uses_coreml=True,
                     )
                     print(out)
 
@@ -413,6 +563,7 @@ def run_llm_task(
                 if not ok:
                     append_error_record(
                         result_path,
+                        task_type="llm_decode",
                         model_id=model_id,
                         model_alias=model_alias,
                         context_len=ctx,
@@ -422,6 +573,9 @@ def run_llm_task(
                         mode="split",
                         prefill_cu=prefill_cu,
                         decode_cu=decode_cu,
+                        x_label="context_len",
+                        x_value=float(ctx),
+                        uses_coreml=True,
                     )
                     print(out)
 
@@ -438,71 +592,79 @@ def load_optional_task(task_type: str):
     return None
 
 
-def run_optional_task(task_cfg: Dict[str, Any], out_dir: Path, timestamp: str, dry_run: bool) -> None:
+def run_optional_task(
+    task_cfg: Dict[str, Any],
+    out_dir: Path,
+    timestamp: str,
+    dry_run: bool,
+) -> None:
     task_type = str(task_cfg.get("task_type"))
     module = load_optional_task(task_type)
     model_alias = str(task_cfg.get("model_alias") or task_type)
-    result_path = out_dir / f"{timestamp}_{model_alias}_bench.jsonl"
+    result_path = task_result_path_for(out_dir, task_type, model_alias, timestamp)
 
     if module is None:
         append_error_record(
             result_path,
+            task_type=task_type,
             model_id=task_type,
             model_alias=model_alias,
             context_len=None,
             stage="task_loader",
             message=f"No optional task module implemented for {task_type}",
             failure_type="task_module_missing",
+            x_label="x",
+            uses_coreml=False,
         )
         return
 
-    for stage_name, fn in (
-        ("prepare_variant", module.prepare_variant),
-        ("run_bench", module.run_bench),
-        ("dump_computeplan", module.dump_computeplan),
-    ):
-        if dry_run:
-            print(f"[dry-run] optional task {task_type} stage {stage_name}")
-            continue
+    prep = module.prepare_variant(task_cfg=task_cfg, root_dir=ROOT, dry_run=dry_run)
 
-        result = fn(task_cfg=task_cfg, out_dir=out_dir)
-        record = {
-            "timestamp": dt.datetime.now().isoformat(),
-            "model_id": task_type,
-            "model_alias": model_alias,
-            "variant_id": None,
-            "context_len": None,
-            "prefill_len": None,
-            "gen_tokens": None,
-            "mode": None,
-            "prefill_compute_units": None,
-            "decode_compute_units": None,
-            "prefill_latency_ms": None,
-            "decode_step_latency_ms_stats": None,
-            "first_decode_step_ms": None,
-            "tpot_ms_mean": None,
-            "tpot_ms_p95": None,
-            "ttft_ms": None,
-            "total_decode_latency_ms": None,
-            "tokens_per_sec": None,
-            "effective_TFLOPS_prefill": None,
-            "effective_TFLOPS_decode": None,
-            "peak_rss_mb": None,
-            "status": result.get("status", "error"),
-            "error_type": result.get("error_type"),
-            "error_message": result.get("error_message") or result.get("message"),
-            "traceback_summary": result.get("error_message") or result.get("message"),
-            "errors": {
-                "stage": stage_name,
-                **result,
-            },
-            "failure_type": result.get("failure_type"),
-        }
-        append_jsonl(result_path, record)
+    bench_result = module.run_bench(
+        task_cfg=task_cfg,
+        prep=prep,
+        root_dir=ROOT,
+        out_dir=out_dir,
+        dry_run=dry_run,
+    )
 
-        if result.get("status") != "ok":
-            # optional tasks should emit one record and skip.
-            break
+    records = bench_result.get("records", [])
+    if records:
+        append_jsonl_many(result_path, records)
+    elif bench_result.get("status") != "ok":
+        append_error_record(
+            result_path,
+            task_type=task_type,
+            model_id=str(task_cfg.get("model_tag") or task_type),
+            model_alias=model_alias,
+            context_len=None,
+            stage="run_bench",
+            message=str(bench_result.get("error_message") or bench_result.get("message") or "bench failed"),
+            failure_type=str(bench_result.get("error_type") or bench_result.get("failure_type") or "bench_failed"),
+            x_label="x",
+            uses_coreml=False,
+        )
+
+    plan_result = module.dump_computeplan(
+        task_cfg=task_cfg,
+        prep=prep,
+        root_dir=ROOT,
+        out_dir=out_dir,
+        dry_run=dry_run,
+    )
+    if plan_result.get("status") != "ok":
+        append_error_record(
+            result_path,
+            task_type=task_type,
+            model_id=str(task_cfg.get("model_tag") or task_type),
+            model_alias=model_alias,
+            context_len=None,
+            stage="dump_computeplan",
+            message=str(plan_result.get("error_message") or plan_result.get("message") or "compute plan failed"),
+            failure_type=str(plan_result.get("error_type") or plan_result.get("failure_type") or "computeplan_fail"),
+            x_label="x",
+            uses_coreml=bool(task_type == "diffusion_sd15"),
+        )
 
 
 def iter_selected_tasks(tasks: Iterable[Dict[str, Any]], only_task: Optional[str]) -> Iterable[Dict[str, Any]]:
@@ -518,6 +680,7 @@ def main() -> int:
     parser.add_argument("--only-task", choices=["llm_decode", "diffusion_sd15", "speech_owsm"])
     parser.add_argument("--only-model")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--skip-convert", action="store_true")
     args = parser.parse_args()
 
     cfg = load_yaml((ROOT / args.suite_config).resolve())
@@ -533,26 +696,30 @@ def main() -> int:
         task_type = str(task.get("task_type"))
         enabled = bool(task.get("enabled", True))
 
-        if task_type == "llm_decode":
-            if not enabled:
-                path = out_dir / f"{timestamp}_llm_decode_disabled_bench.jsonl"
-                append_error_record(
-                    path,
-                    model_id="llm_decode",
-                    model_alias="llm_decode",
-                    context_len=None,
-                    stage="suite",
-                    message="llm_decode task is disabled",
-                    failure_type="task_disabled",
-                )
-                continue
+        if not enabled:
+            path = task_result_path_for(out_dir, task_type, task_type, timestamp)
+            append_error_record(
+                path,
+                task_type=task_type,
+                model_id=task_type,
+                model_alias=task_type,
+                context_len=None,
+                stage="suite",
+                message=f"{task_type} task is disabled",
+                failure_type="task_disabled",
+                x_label="x",
+                uses_coreml=bool(task_type != "speech_owsm"),
+            )
+            continue
 
+        if task_type == "llm_decode":
             run_llm_task(
                 task_cfg=task,
                 out_dir=out_dir,
                 timestamp=timestamp,
                 only_model=args.only_model,
                 dry_run=args.dry_run,
+                skip_convert=args.skip_convert,
             )
             continue
 

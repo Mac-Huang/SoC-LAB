@@ -1,9 +1,18 @@
+# macOS metadata
 .DS_Store
+**/.DS_Store
 **/__pycache__/
 **/*.pyc
 *.swp
 
 # Local env and large generated artifacts
+venv_soclab_m3/
 m3_llm_affinity/.venv/
+m3_llm_affinity/assets/**
+!m3_llm_affinity/assets/README.md
 m3_llm_affinity/artifacts/
 m3_llm_affinity/models/
+m3_llm_affinity/results/**
+!m3_llm_affinity/results/README.md
+m3_llm_affinity/reports/**
+!m3_llm_affinity/reports/README.md

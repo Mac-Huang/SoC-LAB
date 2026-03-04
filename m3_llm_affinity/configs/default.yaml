@@ -1,4 +1,4 @@
-hf_model_id: openai-community/gpt2
+hf_model_id: Qwen/Qwen2.5-7B-Instruct
 context_len: 64
 context_len_sweep: [64, 128, 256, 512]
 prefill_len: 63
@@ -7,8 +7,6 @@ batch_size: 1
 runs: 20
 warmup: 3
 compute_units_list:
-  - CPU_ONLY
-  - CPU_AND_GPU
   - CPU_AND_NE
   - ALL
 seed: 1337

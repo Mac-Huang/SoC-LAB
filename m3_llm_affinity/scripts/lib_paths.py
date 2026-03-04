@@ -9,12 +9,27 @@ from typing import Dict, Optional
 
 ROOT = Path(__file__).resolve().parents[1]
 
+_MODEL_SLUG_OVERRIDES = {
+    "qwen/qwen2.5-7b-instruct": "qwen25_7b",
+    "qwen_qwen2.5-7b-instruct": "qwen25_7b",
+}
+
+
+def _normalized_model_key(model_id: str) -> str:
+    return str(model_id).strip().lower().replace("\\", "/")
+
 
 def slugify_model_id(model_id: str) -> str:
+    override = _MODEL_SLUG_OVERRIDES.get(_normalized_model_key(model_id))
+    if override:
+        return override
     return re.sub(r"[^A-Za-z0-9._-]+", "_", str(model_id)).strip("_")
 
 
 def default_model_alias(model_id: str) -> str:
+    override = _MODEL_SLUG_OVERRIDES.get(_normalized_model_key(model_id))
+    if override:
+        return override
     tail = str(model_id).rstrip("/").split("/")[-1]
     alias = re.sub(r"[^A-Za-z0-9._-]+", "_", tail).strip("_").lower()
     return alias or "model"

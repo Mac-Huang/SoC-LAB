@@ -1,0 +1,26 @@
+suite:
+  out_dir: "results"
+  reports_dir: "reports/analysis"
+  pick_latest_n_jsonl: 500
+
+tasks:
+  - task_type: "llm_decode"
+    enabled: true
+    models:
+      - model_id: "Qwen/Qwen2.5-7B-Instruct"
+        model_alias: "qwen25_7b"
+        allow_weight_quant: true
+        weight_quant_mode: "int4"
+    sweep:
+      context_len_start: 64
+      context_len_max: 4096
+      doubling_steps: 6
+      gen_tokens: 1
+      batch_size: 1
+      runs: 1
+      warmup: 0
+      seed: 1337
+    compute_units:
+      whole: ["CPU_AND_NE", "ALL"]
+      split:
+        - {prefill: "CPU_AND_NE", decode: "CPU_AND_GPU"}

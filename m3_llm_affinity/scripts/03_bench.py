@@ -27,6 +27,11 @@ CU_MAP = {
     "CPU_AND_NE": ct.ComputeUnit.CPU_AND_NE,
     "ALL": ct.ComputeUnit.ALL,
 }
+ALLOWED_SCENARIOS = {
+    ("CPU_AND_NE", "CPU_AND_NE"),
+    ("ALL", "ALL"),
+    ("CPU_AND_NE", "CPU_AND_GPU"),
+}
 
 
 def load_yaml(path: Path) -> Dict[str, Any]:
@@ -145,6 +150,7 @@ def run_single_benchmark(
     prefill_inputs = {
         "input_ids": prompt_tokens.astype(np.int32, copy=False),
         "attention_mask": np.ones((1, prefill_len), dtype=np.int32),
+        "position_ids": np.arange(prefill_len, dtype=np.int32).reshape(1, prefill_len),
     }
 
     t0 = perf_counter()
@@ -222,6 +228,22 @@ def run_single_benchmark(
     }
 
 
+def scenario_label_for_record(mode: str, prefill_cu: str, decode_cu: str) -> str:
+    whole = {
+        "CPU_ONLY": "CPU",
+        "CPU_AND_GPU": "GPU",
+        "CPU_AND_NE": "NE",
+        "ALL": "ALL",
+    }
+    split = {
+        ("CPU_AND_NE", "CPU_AND_GPU"): "NE→GPU",
+        ("CPU_AND_GPU", "CPU_AND_NE"): "GPU→NE",
+    }
+    if mode == "whole":
+        return whole.get(prefill_cu, prefill_cu)
+    return split.get((prefill_cu, decode_cu), f"{prefill_cu}->{decode_cu}")
+
+
 def scenario_list(
     mode: str,
     config_compute_units: Sequence[str],
@@ -231,12 +253,22 @@ def scenario_list(
 ) -> List[Tuple[str, str]]:
     if mode == "whole":
         if cu is not None:
-            return [(cu, cu)]
-        return [(name, name) for name in config_compute_units]
+            scenarios = [(cu, cu)]
+        else:
+            scenarios = [(name, name) for name in config_compute_units]
+    else:
+        if prefill_cu is None or decode_cu is None:
+            raise ValueError("split mode requires --prefill-cu and --decode-cu")
+        scenarios = [(prefill_cu, decode_cu)]
 
-    if prefill_cu is None or decode_cu is None:
-        raise ValueError("split mode requires --prefill-cu and --decode-cu")
-    return [(prefill_cu, decode_cu)]
+    disallowed = [f"{p}->{d}" for p, d in scenarios if (p, d) not in ALLOWED_SCENARIOS]
+    if disallowed:
+        raise ValueError(
+            "Decode mode policy only allows scenarios: "
+            "CPU_AND_NE->CPU_AND_NE, ALL->ALL, CPU_AND_NE->CPU_AND_GPU. "
+            f"Got disallowed: {', '.join(disallowed)}"
+        )
+    return scenarios
 
 
 def error_record(base: Dict[str, Any], process: psutil.Process, err: Dict[str, str], run_index: int | None) -> Dict[str, Any]:
@@ -254,6 +286,8 @@ def error_record(base: Dict[str, Any], process: psutil.Process, err: Dict[str, s
         "effective_TFLOPS_prefill": None,
         "effective_TFLOPS_decode": None,
         "peak_rss_mb": float(process.memory_info().rss / (1024.0 * 1024.0)),
+        "primary_latency_ms": None,
+        "primary_throughput": None,
         "status": "error",
         "errors": err,
         "error_type": err["type"],
@@ -359,8 +393,10 @@ def main() -> int:
 
     with result_path.open("a", encoding="utf-8") as out:
         for prefill_cu_name, decode_cu_name in scenarios:
+            scenario_label = scenario_label_for_record(args.mode, prefill_cu_name, decode_cu_name)
             base = {
                 "timestamp": dt.datetime.now().isoformat(),
+                "task_type": "llm_decode",
                 "model_id": model_id,
                 "model_alias": model_alias,
                 "variant_id": variant_id,
@@ -368,8 +404,13 @@ def main() -> int:
                 "prefill_len": prefill_len,
                 "gen_tokens": gen_tokens,
                 "mode": args.mode,
+                "mode_label": scenario_label,
                 "prefill_compute_units": prefill_cu_name,
                 "decode_compute_units": decode_cu_name,
+                "scenario_label": scenario_label,
+                "x_label": "context_len",
+                "x_value": int(context_len),
+                "uses_coreml": True,
             }
 
             try:
@@ -435,6 +476,8 @@ def main() -> int:
                         **base,
                         "run_index": run_idx,
                         **metrics,
+                        "primary_latency_ms": metrics.get("ttft_ms"),
+                        "primary_throughput": metrics.get("tokens_per_sec"),
                         "status": "ok",
                         "errors": None,
                         "error_type": None,

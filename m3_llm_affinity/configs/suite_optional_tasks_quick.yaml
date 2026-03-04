@@ -1,0 +1,34 @@
+suite:
+  out_dir: "results"
+  reports_dir: "reports/analysis"
+  pick_latest_n_jsonl: 200
+
+tasks:
+  - task_type: "diffusion_sd15"
+    enabled: true
+    model_alias: "sd15"
+    byop_coreml_dir: "assets/sd15_coreml"
+    convert_if_missing: true
+    sweep:
+      steps_list: [10]
+      image_size: 512
+      runs: 1
+      warmup: 0
+      seed: 1337
+    compute_units:
+      stages:
+        - {text_encoder: "CPU_AND_NE", unet: "CPU_AND_GPU", vae: "CPU_AND_GPU"}
+        - {text_encoder: "ALL",        unet: "ALL",        vae: "ALL"}
+
+  - task_type: "speech_owsm"
+    enabled: true
+    model_tag: "espnet/owsm_v3.1_ebf_small"
+    model_alias: "owsm_v31_small"
+    sweep:
+      audio_seconds_list: [5, 10]
+      sample_rate: 16000
+      runs: 1
+      warmup: 0
+      seed: 1337
+    compute_units:
+      backends: ["CPU_ONLY", "MPS"]

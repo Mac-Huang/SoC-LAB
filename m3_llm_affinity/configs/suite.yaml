@@ -1,6 +1,6 @@
 suite:
   out_dir: "results"
-  reports_dir: "reports/analysis"
+  reports_dir: "reports/analysis/suite/latest"
   pick_latest_n_jsonl: 50
 
 tasks:
@@ -9,47 +9,51 @@ tasks:
     models:
       - model_id: "openai-community/gpt2"
         model_alias: "gpt2"
-      - model_id: "meta-llama/Llama-3.1-8B-Instruct"
-        model_alias: "llama31_8b"
-        hf_token_env: "HF_TOKEN"
+      - model_id: "Qwen/Qwen2.5-7B-Instruct"
+        model_alias: "qwen25_7b"
+        allow_weight_quant: true
+        weight_quant_mode: "int4"
     sweep:
       context_len_start: 64
-      context_len_max: 4096
-      doubling_steps: 6
-      gen_tokens: 32
+      context_len_max: 1024
+      doubling_steps: 5
+      gen_tokens: 16
       batch_size: 1
-      runs: 10
-      warmup: 2
+      runs: 5
+      warmup: 1
       seed: 1337
     compute_units:
-      whole: ["CPU_ONLY", "CPU_AND_GPU", "CPU_AND_NE", "ALL"]
+      whole: ["CPU_AND_NE", "ALL"]
       split:
         - {prefill: "CPU_AND_NE", decode: "CPU_AND_GPU"}
-        - {prefill: "CPU_AND_GPU", decode: "CPU_AND_NE"}
 
   - task_type: "diffusion_sd15"
-    enabled: false
+    enabled: true
     model_alias: "sd15"
+    byop_coreml_dir: "assets/sd15_coreml"
+    convert_if_missing: true
     sweep:
       steps_list: [10, 20, 30, 50]
       image_size: 512
-      runs: 5
+      runs: 3
       warmup: 1
+      seed: 1337
     compute_units:
       stages:
         - {text_encoder: "CPU_AND_NE", unet: "CPU_AND_GPU", vae: "CPU_AND_GPU"}
         - {text_encoder: "CPU_AND_GPU", unet: "CPU_AND_NE", vae: "CPU_AND_GPU"}
-        - {text_encoder: "ALL", unet: "ALL", vae: "ALL"}
+        - {text_encoder: "ALL",        unet: "ALL",        vae: "ALL"}
+        - {text_encoder: "CPU_ONLY",   unet: "CPU_ONLY",   vae: "CPU_ONLY"}
 
   - task_type: "speech_owsm"
-    enabled: false
-    model_alias: "owsm_v31"
+    enabled: true
+    model_tag: "espnet/owsm_v3.1_ebf_small"
+    model_alias: "owsm_v31_small"
     sweep:
       audio_seconds_list: [5, 10, 20, 40]
-      runs: 5
+      sample_rate: 16000
+      runs: 3
       warmup: 1
+      seed: 1337
     compute_units:
-      stages:
-        - {encoder: "CPU_AND_NE", decoder: "CPU_AND_GPU"}
-        - {encoder: "CPU_AND_GPU", decoder: "CPU_AND_NE"}
-        - {encoder: "ALL", decoder: "ALL"}
+      backends: ["CPU_ONLY", "MPS"]
