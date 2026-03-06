@@ -5,8 +5,10 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import glob
 import json
 import os
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -22,6 +24,12 @@ DEFAULT_CONFIG_FOR_SUBSCRIPTS = "configs/default.yaml"
 HARD_FAIL_TYPES = {"OOM", "model_compile_fail", "coreml_convert_fail"}
 ALLOWED_LLM_WHOLE = ("CPU_AND_NE", "ALL")
 ALLOWED_LLM_SPLIT = (("CPU_AND_NE", "CPU_AND_GPU"),)
+OPTIONAL_HARD_FAIL_TYPES = {
+    "missing_dependency",
+    "missing_asset",
+    "download_unavailable",
+    "backend_unavailable",
+}
 
 
 def load_yaml(path: Path) -> Dict[str, Any]:
@@ -585,6 +593,10 @@ def load_optional_task(task_type: str):
         from tasks import diffusion_sd15 as module
 
         return module
+    if task_type == "speech_whisperkit":
+        from tasks import speech_whisperkit as module
+
+        return module
     if task_type == "speech_owsm":
         from tasks import speech_owsm as module
 
@@ -592,22 +604,72 @@ def load_optional_task(task_type: str):
     return None
 
 
+def _optional_model_id(task_cfg: Dict[str, Any], task_type: str) -> str:
+    if task_type == "speech_owsm":
+        return str(task_cfg.get("model_tag") or task_type)
+    if task_type == "speech_whisperkit":
+        variant = str(task_cfg.get("model_variant", "openai_whisper-tiny.en"))
+        return f"argmaxinc/whisperkit-coreml/{variant}"
+    return str(task_cfg.get("model_id") or task_cfg.get("model_tag") or task_type)
+
+
+def _dedupe_paths(paths: Iterable[Path]) -> List[Path]:
+    out: List[Path] = []
+    seen = set()
+    for path in paths:
+        p = path.resolve()
+        if not p.exists() or not p.is_file():
+            continue
+        key = str(p)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(p)
+    return out
+
+
+def _resolve_globs(patterns: Iterable[str]) -> List[Path]:
+    out: List[Path] = []
+    for pattern in patterns:
+        text = str(pattern)
+        if not text:
+            continue
+        if Path(text).is_absolute():
+            hits = glob.glob(text, recursive=True)
+        else:
+            hits = glob.glob(str((ROOT / text).resolve()), recursive=True)
+        out.extend(Path(p) for p in hits)
+    return _dedupe_paths(out)
+
+
+def _collect_run_jsonls(out_dir: Path, sweep_id: str) -> List[Path]:
+    return _dedupe_paths(sorted(out_dir.glob(f"**/sweep_{sweep_id}/*_bench.jsonl")))
+
+
+def _build_analyzer_inputs(out_dir: Path, sweep_id: str, historical_globs: Iterable[str]) -> List[Path]:
+    current = _collect_run_jsonls(out_dir, sweep_id)
+    historical = _resolve_globs(historical_globs)
+    return _dedupe_paths([*current, *historical])
+
+
 def run_optional_task(
     task_cfg: Dict[str, Any],
     out_dir: Path,
     timestamp: str,
     dry_run: bool,
-) -> None:
+) -> Dict[str, Any]:
     task_type = str(task_cfg.get("task_type"))
     module = load_optional_task(task_type)
     model_alias = str(task_cfg.get("model_alias") or task_type)
     result_path = task_result_path_for(out_dir, task_type, model_alias, timestamp)
+    model_id = _optional_model_id(task_cfg, task_type)
+    hard_fail = False
 
     if module is None:
         append_error_record(
             result_path,
             task_type=task_type,
-            model_id=task_type,
+            model_id=model_id,
             model_alias=model_alias,
             context_len=None,
             stage="task_loader",
@@ -616,9 +678,15 @@ def run_optional_task(
             x_label="x",
             uses_coreml=False,
         )
-        return
+        return {"result_path": result_path, "hard_fail": False}
 
     prep = module.prepare_variant(task_cfg=task_cfg, root_dir=ROOT, dry_run=dry_run)
+    if prep.get("status") != "ok":
+        failure = str(prep.get("error_type") or prep.get("failure_type") or "")
+        if task_type == "speech_whisperkit" and failure in OPTIONAL_HARD_FAIL_TYPES:
+            hard_fail = True
+    if dry_run and prep.get("message"):
+        print(f"[dry-run] {task_type}: {prep.get('message')}")
 
     bench_result = module.run_bench(
         task_cfg=task_cfg,
@@ -631,19 +699,30 @@ def run_optional_task(
     records = bench_result.get("records", [])
     if records:
         append_jsonl_many(result_path, records)
+        if task_type == "speech_whisperkit":
+            for row in records:
+                if str(row.get("status") or "ok") != "ok":
+                    failure = str(row.get("error_type") or row.get("failure_type") or "")
+                    if failure in OPTIONAL_HARD_FAIL_TYPES:
+                        hard_fail = True
     elif bench_result.get("status") != "ok":
+        failure = str(bench_result.get("error_type") or bench_result.get("failure_type") or "bench_failed")
         append_error_record(
             result_path,
             task_type=task_type,
-            model_id=str(task_cfg.get("model_tag") or task_type),
+            model_id=model_id,
             model_alias=model_alias,
             context_len=None,
             stage="run_bench",
             message=str(bench_result.get("error_message") or bench_result.get("message") or "bench failed"),
-            failure_type=str(bench_result.get("error_type") or bench_result.get("failure_type") or "bench_failed"),
+            failure_type=failure,
             x_label="x",
-            uses_coreml=False,
+            uses_coreml=bool(task_type != "speech_owsm"),
         )
+        if task_type == "speech_whisperkit" and failure in OPTIONAL_HARD_FAIL_TYPES:
+            hard_fail = True
+    if dry_run and bench_result.get("message"):
+        print(f"[dry-run] {task_type}: {bench_result.get('message')}")
 
     plan_result = module.dump_computeplan(
         task_cfg=task_cfg,
@@ -653,18 +732,28 @@ def run_optional_task(
         dry_run=dry_run,
     )
     if plan_result.get("status") != "ok":
+        failure = str(plan_result.get("error_type") or plan_result.get("failure_type") or "computeplan_fail")
         append_error_record(
             result_path,
             task_type=task_type,
-            model_id=str(task_cfg.get("model_tag") or task_type),
+            model_id=model_id,
             model_alias=model_alias,
             context_len=None,
             stage="dump_computeplan",
             message=str(plan_result.get("error_message") or plan_result.get("message") or "compute plan failed"),
-            failure_type=str(plan_result.get("error_type") or plan_result.get("failure_type") or "computeplan_fail"),
+            failure_type=failure,
             x_label="x",
-            uses_coreml=bool(task_type == "diffusion_sd15"),
+            uses_coreml=bool(task_type != "speech_owsm"),
         )
+        if task_type == "speech_whisperkit" and failure in OPTIONAL_HARD_FAIL_TYPES:
+            hard_fail = True
+    if dry_run and plan_result.get("message"):
+        print(f"[dry-run] {task_type}: {plan_result.get('message')}")
+
+    return {
+        "result_path": result_path,
+        "hard_fail": bool(hard_fail),
+    }
 
 
 def iter_selected_tasks(tasks: Iterable[Dict[str, Any]], only_task: Optional[str]) -> Iterable[Dict[str, Any]]:
@@ -677,10 +766,12 @@ def iter_selected_tasks(tasks: Iterable[Dict[str, Any]], only_task: Optional[str
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--suite-config", default="configs/suite.yaml")
-    parser.add_argument("--only-task", choices=["llm_decode", "diffusion_sd15", "speech_owsm"])
+    parser.add_argument("--only-task", choices=["llm_decode", "diffusion_sd15", "speech_owsm", "speech_whisperkit"])
     parser.add_argument("--only-model")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--skip-convert", action="store_true")
+    parser.add_argument("--no-lm-rerun", action="store_true")
+    parser.add_argument("--analyze-after-run", action="store_true")
     args = parser.parse_args()
 
     cfg = load_yaml((ROOT / args.suite_config).resolve())
@@ -691,6 +782,7 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     timestamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    hard_fail_hit = False
 
     for task in iter_selected_tasks(tasks, args.only_task):
         task_type = str(task.get("task_type"))
@@ -713,6 +805,9 @@ def main() -> int:
             continue
 
         if task_type == "llm_decode":
+            if args.no_lm_rerun:
+                print("[suite] skipping llm_decode due to --no-lm-rerun")
+                continue
             run_llm_task(
                 task_cfg=task,
                 out_dir=out_dir,
@@ -723,9 +818,44 @@ def main() -> int:
             )
             continue
 
-        run_optional_task(task_cfg=task, out_dir=out_dir, timestamp=timestamp, dry_run=args.dry_run)
+        optional_result = run_optional_task(task_cfg=task, out_dir=out_dir, timestamp=timestamp, dry_run=args.dry_run)
+        if optional_result.get("hard_fail") and not args.dry_run:
+            print(f"[suite] hard-fail prerequisite unmet for {task_type}; stopping campaign.")
+            hard_fail_hit = True
+            break
 
     print(f"suite_results_dir: {out_dir}")
+
+    include_globs = [str(x) for x in suite_cfg.get("include_historical_results_globs", [])]
+    analyze_requested = bool(args.analyze_after_run or args.dry_run)
+    if analyze_requested:
+        analyzer_inputs = _build_analyzer_inputs(out_dir=out_dir, sweep_id=timestamp, historical_globs=include_globs)
+        analyzer_cmd = [
+            sys.executable,
+            "scripts/07_analyze_results.py",
+            "--suite-config",
+            args.suite_config,
+        ]
+        if analyzer_inputs:
+            analyzer_cmd.append("--inputs")
+            analyzer_cmd.extend(str(path) for path in analyzer_inputs)
+        print(
+            "[suite] analyzer inputs: "
+            f"{len(analyzer_inputs)} files ({len(_collect_run_jsonls(out_dir, timestamp))} current run + "
+            f"{max(0, len(analyzer_inputs) - len(_collect_run_jsonls(out_dir, timestamp)))} historical)"
+        )
+        if args.dry_run:
+            print("[dry-run] " + " ".join(shlex.quote(x) for x in analyzer_cmd))
+        else:
+            ok, out = run_command(analyzer_cmd, ROOT, dry_run=False)
+            if out:
+                print(out)
+            if not ok:
+                print("[suite] analyzer failed")
+                return 3
+
+    if hard_fail_hit:
+        return 2
     return 0
 
 

@@ -6,7 +6,8 @@ This project benchmarks hardware affinity behavior on Apple Silicon M3 for three
 
 1. `llm_decode` (Core ML): decoder-only prefill/decode latency/throughput behavior.
 2. `diffusion_sd15` (Core ML): staged text-encoder / U-Net / VAE inference behavior.
-3. `speech_owsm` (ESPnet): CPU vs MPS backend behavior for speech inference.
+3. `speech_whisperkit` (Core ML): ANE/GPU stage-placement behavior for speech inference.
+4. `speech_owsm` (ESPnet): CPU vs MPS backend behavior for speech inference.
 
 The main objective is to compare placement strategies and detect where latency and throughput winners diverge.
 
@@ -34,6 +35,7 @@ For `llm_decode` per `(model, context_len)`:
 For optional tasks:
 
 - `scripts/tasks/diffusion_sd15.py` for SD1.5 staged benchmark + compute plan.
+- `scripts/tasks/speech_whisperkit.py` for WhisperKit staged benchmark + compute plan.
 - `scripts/tasks/speech_owsm.py` for speech benchmark (no Core ML compute plan output expected).
 
 ## Result Schema
@@ -49,6 +51,7 @@ Task-specific mappings:
 
 - `llm_decode`: `x=context_len`, primary latency `ttft_ms`, throughput `tokens_per_sec`
 - `diffusion_sd15`: `x=steps`, primary latency `total_ms`, throughput `steps_per_sec`
+- `speech_whisperkit`: `x=audio_seconds`, primary latency `total_ms`, throughput `audio_seconds_per_sec`
 - `speech_owsm`: `x=audio_seconds`, primary latency `total_ms`, throughput `audio_seconds_per_sec`
 
 ## Storage Layout

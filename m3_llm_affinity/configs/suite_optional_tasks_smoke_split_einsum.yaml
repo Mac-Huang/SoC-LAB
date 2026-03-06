@@ -1,0 +1,57 @@
+# Deprecated compatibility alias.
+# Canonical large-model smoke config: suite_optional_tasks_smoke_sdxl_refiner_whisper_largev3.yaml
+suite:
+  out_dir: "results"
+  reports_dir: "reports/analysis/suite/latest"
+  pick_latest_n_jsonl: 200
+  include_historical_results_globs:
+    - "results/llm_decode/**/*_bench.jsonl"
+
+tasks:
+  - task_type: "diffusion_sd15"
+    enabled: true
+    model_id: "apple/coreml-stable-diffusion-xl-base-with-refiner"
+    model_alias: "sdxl_refiner"
+    assets_root: "assets/sdxl_refiner_coreml/packages"
+    convert_if_missing: true
+    download_repo_id: "apple/coreml-stable-diffusion-xl-base-with-refiner"
+    unet_preference: "refiner"
+    sweep:
+      steps_list: [10]
+      image_size: 1024
+      runs: 1
+      warmup: 0
+      seed: 1337
+    scenarios:
+      - label: "ALL|ALL|ALL"
+        text_encoder: "ALL"
+        unet: "ALL"
+        vae: "ALL"
+      - label: "NE|NE|NE"
+        text_encoder: "CPU_AND_NE"
+        unet: "CPU_AND_NE"
+        vae: "CPU_AND_NE"
+
+  - task_type: "speech_whisperkit"
+    enabled: true
+    model_variant: "openai_whisper-large-v3"
+    model_alias: "whisperkit_large_v3"
+    assets_root: "assets/whisperkit_coreml"
+    download_if_missing: true
+    sweep:
+      audio_seconds_list: [5, 20]
+      sample_rate: 16000
+      runs: 1
+      warmup: 0
+      seed: 1337
+      decode_tokens_per_second: 2
+      max_decode_tokens: 128
+    scenarios:
+      - label: "GPU|NE|NE"
+        mel: "CPU_AND_GPU"
+        encoder: "CPU_AND_NE"
+        decoder: "CPU_AND_NE"
+      - label: "NE|NE|NE"
+        mel: "CPU_AND_NE"
+        encoder: "CPU_AND_NE"
+        decoder: "CPU_AND_NE"

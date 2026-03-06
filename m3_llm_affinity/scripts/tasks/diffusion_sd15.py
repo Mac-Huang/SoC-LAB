@@ -21,6 +21,9 @@ try:
 except Exception:  # pragma: no cover - handled by dependency checks
     ct = None
 
+DEFAULT_MODEL_ID = "stable-diffusion-v1.5"
+DEFAULT_REPO_ID = "apple/coreml-stable-diffusion-v1-5"
+
 CU_MAP = {
     "CPU_ONLY": getattr(ct.ComputeUnit, "CPU_ONLY", None) if ct else None,
     "CPU_AND_GPU": getattr(ct.ComputeUnit, "CPU_AND_GPU", None) if ct else None,
@@ -62,13 +65,48 @@ def _deps_available() -> Tuple[bool, str]:
     return True, ""
 
 
+def _resolve_assets_root(task_cfg: Dict[str, Any], root_dir: Path) -> Path:
+    raw_assets = task_cfg.get("assets_root")
+    if raw_assets:
+        base_dir = Path(str(raw_assets))
+    elif task_cfg.get("byop_coreml_dir"):
+        base_dir = Path(str(task_cfg.get("byop_coreml_dir")))
+    else:
+        artifact_set = str(task_cfg.get("artifact_set", "split_einsum"))
+        if artifact_set == "split_einsum":
+            base_dir = Path("assets/sd15_coreml/split_einsum/packages")
+        elif artifact_set == "original":
+            base_dir = Path("assets/sd15_coreml/original/packages")
+        else:
+            base_dir = Path("assets/sd15_coreml")
+
+    if not base_dir.is_absolute():
+        base_dir = (root_dir / base_dir).resolve()
+    return base_dir
+
+
+def _expected_assets_message(base_dir: Path) -> str:
+    return (
+        f"Missing SD15 assets in {base_dir}. Expected files: "
+        "text_encoder.(mlpackage|mlmodelc), "
+        "unet.(mlpackage|mlmodelc), "
+        "vae_decoder.(mlpackage|mlmodelc)."
+    )
+
+
+def _unet_candidates(preference: str) -> List[str]:
+    pref = str(preference or "base").strip().lower()
+    if pref == "refiner":
+        return ["unet_refiner", "unet-refiner", "refiner", "unet", "u_net"]
+    return ["unet", "u_net", "refiner"]
+
+
 def _find_artifact(base_dir: Path, candidates: Sequence[str]) -> Optional[Path]:
     def _is_valid_path(path: Path) -> bool:
         if ".cache" in path.parts:
             return False
         if path.suffix == ".mlpackage":
-            manifest = path / "Manifest.json"
-            return manifest.exists()
+            return (path / "Manifest.json").exists()
         if path.suffix == ".mlmodelc":
             return True
         return False
@@ -80,32 +118,28 @@ def _find_artifact(base_dir: Path, candidates: Sequence[str]) -> Optional[Path]:
                 return p
 
     for stem in candidates:
-        matches = [p for p in sorted(base_dir.rglob(f"*{stem}*.mlpackage")) if _is_valid_path(p)]
-        if matches:
-            return matches[0]
-        matches = [p for p in sorted(base_dir.rglob(f"*{stem}*.mlmodelc")) if _is_valid_path(p)]
-        if matches:
-            return matches[0]
+        pkg_hits = [p for p in sorted(base_dir.rglob(f"*{stem}*.mlpackage")) if _is_valid_path(p)]
+        if pkg_hits:
+            return pkg_hits[0]
+        c_hits = [p for p in sorted(base_dir.rglob(f"*{stem}*.mlmodelc")) if _is_valid_path(p)]
+        if c_hits:
+            return c_hits[0]
+
     return None
 
 
-def _locate_stage_models(base_dir: Path) -> Dict[str, Path]:
+def _locate_stage_models(base_dir: Path, *, unet_preference: str = "base") -> Dict[str, Path]:
     stage_map = {
         "text_encoder": _find_artifact(base_dir, ["text_encoder", "text-encoder", "textencoder"]),
-        "unet": _find_artifact(base_dir, ["unet", "u_net"]),
+        "unet": _find_artifact(base_dir, _unet_candidates(unet_preference)),
         "vae_decoder": _find_artifact(base_dir, ["vae_decoder", "vae-decoder", "vaedecoder", "vae"]),
     }
-    missing = [name for name, path in stage_map.items() if path is None]
-    if missing:
-        raise FileNotFoundError(
-            f"Missing SD15 stage artifacts in {base_dir}: {', '.join(missing)}. "
-            "Expected text_encoder/unet/vae_decoder (.mlpackage or .mlmodelc)."
-        )
+    if any(path is None for path in stage_map.values()):
+        return {}
     return {k: v for k, v in stage_map.items() if v is not None}
 
 
-def _try_download_preconverted(base_dir: Path) -> Tuple[bool, str]:
-    """Best-effort helper for BYO assets. Returns (ok, message)."""
+def _try_download_preconverted(base_dir: Path, repo_id: str) -> Tuple[bool, str]:
     if importlib.util.find_spec("huggingface_hub") is None:
         return False, "huggingface_hub is not installed"
 
@@ -113,17 +147,60 @@ def _try_download_preconverted(base_dir: Path) -> Tuple[bool, str]:
         from huggingface_hub import snapshot_download
 
         base_dir.mkdir(parents=True, exist_ok=True)
-
-        # Try a commonly used repo containing pre-converted SD15 assets.
         snapshot_download(
-            repo_id="apple/coreml-stable-diffusion-v1-5",
+            repo_id=str(repo_id),
             local_dir=str(base_dir),
-            local_dir_use_symlinks=False,
             allow_patterns=["**/*text*encoder*", "**/*unet*", "**/*vae*decoder*", "**/*.mlpackage", "**/*.mlmodelc"],
         )
-        return True, "downloaded candidate SD15 Core ML assets"
+        return True, f"downloaded candidate diffusion Core ML assets from {repo_id}"
     except Exception as exc:
         return False, f"automatic SD15 asset download failed: {type(exc).__name__}: {exc}"
+
+
+def _parse_scenarios(task_cfg: Dict[str, Any]) -> List[Dict[str, str]]:
+    raw = task_cfg.get("scenarios")
+    if isinstance(raw, list) and raw:
+        out: List[Dict[str, str]] = []
+        for row in raw:
+            out.append(
+                {
+                    "label": str(row.get("label") or ""),
+                    "text_encoder": str(row.get("text_encoder")),
+                    "unet": str(row.get("unet")),
+                    "vae": str(row.get("vae") or row.get("vae_decoder")),
+                }
+            )
+        return out
+
+    stage_cfg = task_cfg.get("compute_units", {}).get("stages", [])
+    out = []
+    for row in stage_cfg:
+        out.append(
+            {
+                "label": str(row.get("label") or ""),
+                "text_encoder": str(row.get("text_encoder")),
+                "unet": str(row.get("unet")),
+                "vae": str(row.get("vae") or row.get("vae_decoder")),
+            }
+        )
+    return out
+
+
+def _download_repo_for_task(task_cfg: Dict[str, Any]) -> str:
+    explicit = task_cfg.get("download_repo_id") or task_cfg.get("model_repo_id")
+    if explicit:
+        return str(explicit)
+
+    model_id = str(task_cfg.get("model_id") or "")
+    if "/" in model_id:
+        return model_id
+    return DEFAULT_REPO_ID
+
+
+def _scenario_label(te_cu: str, unet_cu: str, vae_cu: str, explicit: str = "") -> str:
+    if explicit:
+        return explicit
+    return f"{ABBR.get(te_cu, te_cu)}|{ABBR.get(unet_cu, unet_cu)}|{ABBR.get(vae_cu, vae_cu)}"
 
 
 def _parse_multiarray_input(inp: Any) -> Tuple[Tuple[int, ...], np.dtype]:
@@ -140,12 +217,68 @@ def _parse_multiarray_input(inp: Any) -> Tuple[Tuple[int, ...], np.dtype]:
     return shape, np_dtype
 
 
+def _dtype_for_spec(inp: Any) -> np.dtype:
+    _, dtype = _parse_multiarray_input(inp)
+    return dtype
+
+
+def _fixed_prompt_token_ids(length: int, dtype: np.dtype) -> np.ndarray:
+    prompt = "A photo of a lighthouse on a rocky coast at golden hour."
+    vals = [ord(ch) for ch in prompt]
+    ids = np.asarray([(vals[i % len(vals)] * (i + 3)) % 49408 for i in range(length)], dtype=np.int32)
+    ids[0] = 49406
+    ids[-1] = 49407
+    return ids.astype(dtype, copy=False)
+
+
+def _cast_or_match_shape(arr: np.ndarray, shape: Tuple[int, ...], dtype: np.dtype) -> np.ndarray:
+    out = np.asarray(arr, dtype=dtype)
+    if tuple(out.shape) == tuple(shape):
+        return out
+
+    # Expand rank with leading singleton dimensions if needed.
+    while out.ndim < len(shape):
+        out = np.expand_dims(out, axis=0)
+
+    # Broadcast leading batch-like dimension if required.
+    for axis, target in enumerate(shape):
+        current = out.shape[axis]
+        if current == target:
+            continue
+        if current == 1 and target > 1:
+            reps = [1] * out.ndim
+            reps[axis] = target
+            out = np.tile(out, reps)
+            continue
+        if target > 0:
+            slicer = [slice(None)] * out.ndim
+            slicer[axis] = slice(0, min(current, target))
+            out = out[tuple(slicer)]
+            if out.shape[axis] < target:
+                pad_width = [(0, 0)] * out.ndim
+                pad_width[axis] = (0, target - out.shape[axis])
+                out = np.pad(out, pad_width)
+
+    return out.astype(dtype, copy=False)
+
+
+def _extract_text_hidden(text_outputs: Dict[str, Any]) -> np.ndarray:
+    preferred = ["last_hidden_state", "hidden_states", "encoder_hidden_states"]
+    for key in preferred:
+        if key in text_outputs:
+            return np.asarray(text_outputs[key])
+    for value in text_outputs.values():
+        return np.asarray(value)
+    raise RuntimeError("text_encoder produced no outputs")
+
+
 def _make_stage_inputs(
     model: Any,
     *,
     stage: str,
     seed: int,
     step_index: int,
+    text_hidden: Optional[np.ndarray] = None,
 ) -> Dict[str, np.ndarray]:
     rng = np.random.default_rng(seed + step_index)
     spec = model.get_spec()
@@ -157,6 +290,15 @@ def _make_stage_inputs(
 
         shape, np_dtype = _parse_multiarray_input(inp)
         name = inp.name.lower()
+
+        if stage == "text_encoder" and "input" in name and "id" in name:
+            tokens = _fixed_prompt_token_ids(int(np.prod(shape)), np.int32).reshape(shape)
+            inputs[inp.name] = tokens.astype(np_dtype, copy=False)
+            continue
+
+        if stage == "unet" and text_hidden is not None and "encoder_hidden" in name:
+            inputs[inp.name] = _cast_or_match_shape(text_hidden, shape, np_dtype)
+            continue
 
         if np.issubdtype(np_dtype, np.integer):
             high = 49408 if "token" in name or "input" in name else 32000
@@ -201,13 +343,21 @@ def _benchmark_once(
 
     text_inputs = _make_stage_inputs(text_encoder_model, stage="text_encoder", seed=seed, step_index=0)
     t0 = perf_counter()
-    _ = text_encoder_model.predict(text_inputs)
+    text_outputs = text_encoder_model.predict(text_inputs)
     textenc_ms = (perf_counter() - t0) * 1000.0
     peak_rss = max(peak_rss, process.memory_info().rss)
 
+    text_hidden = _extract_text_hidden(text_outputs)
+
     unet_steps: List[float] = []
     for step in range(int(steps)):
-        unet_inputs = _make_stage_inputs(unet_model, stage="unet", seed=seed, step_index=step)
+        unet_inputs = _make_stage_inputs(
+            unet_model,
+            stage="unet",
+            seed=seed,
+            step_index=step,
+            text_hidden=text_hidden,
+        )
         t1 = perf_counter()
         _ = unet_model.predict(unet_inputs)
         unet_steps.append((perf_counter() - t1) * 1000.0)
@@ -237,6 +387,7 @@ def _benchmark_once(
 
 def _error_row(
     *,
+    model_id: str,
     model_alias: str,
     scenario_label: Optional[str],
     x_value: Optional[int],
@@ -249,7 +400,7 @@ def _error_row(
     return {
         "timestamp": _now(),
         "task_type": "diffusion_sd15",
-        "model_id": "stable-diffusion-v1-5-coreml",
+        "model_id": str(model_id),
         "model_alias": model_alias,
         "variant_id": None,
         "context_len": None,
@@ -282,6 +433,7 @@ def _error_row(
 
 def _ok_row(
     *,
+    model_id: str,
     model_alias: str,
     scenario_label: str,
     steps: int,
@@ -294,7 +446,7 @@ def _ok_row(
     return {
         "timestamp": _now(),
         "task_type": "diffusion_sd15",
-        "model_id": "stable-diffusion-v1-5-coreml",
+        "model_id": str(model_id),
         "model_alias": model_alias,
         "variant_id": None,
         "context_len": None,
@@ -333,7 +485,7 @@ def _ok_row(
     }
 
 
-def prepare_variant(task_cfg: Dict[str, Any], root_dir: Path, **_: Any) -> Dict[str, Any]:
+def prepare_variant(task_cfg: Dict[str, Any], root_dir: Path, **kwargs: Any) -> Dict[str, Any]:
     enabled = bool(task_cfg.get("enabled", False))
     if not enabled:
         return _skip("diffusion_sd15 disabled in suite config", "task_disabled")
@@ -342,37 +494,47 @@ def prepare_variant(task_cfg: Dict[str, Any], root_dir: Path, **_: Any) -> Dict[
     if not ok:
         return _skip(reason, "missing_dependency")
 
-    base_dir = Path(str(task_cfg.get("byop_coreml_dir", "assets/sd15_coreml")))
-    if not base_dir.is_absolute():
-        base_dir = (root_dir / base_dir).resolve()
-
+    base_dir = _resolve_assets_root(task_cfg, root_dir)
+    scenarios = _parse_scenarios(task_cfg)
     convert_if_missing = bool(task_cfg.get("convert_if_missing", False))
+    model_id = str(task_cfg.get("model_id", DEFAULT_MODEL_ID))
+    download_repo = _download_repo_for_task(task_cfg)
+    unet_preference = str(task_cfg.get("unet_preference", "base")).strip().lower()
+    dry_run = bool(kwargs.get("dry_run", False))
 
-    try:
-        stage_paths = _locate_stage_models(base_dir)
-        return _ok(assets_dir=str(base_dir), stage_paths={k: str(v) for k, v in stage_paths.items()})
-    except Exception as exc:
-        if convert_if_missing:
-            dl_ok, msg = _try_download_preconverted(base_dir)
-            if dl_ok:
-                try:
-                    stage_paths = _locate_stage_models(base_dir)
-                    return _ok(
-                        assets_dir=str(base_dir),
-                        stage_paths={k: str(v) for k, v in stage_paths.items()},
-                        message=msg,
-                    )
-                except Exception as exc2:
-                    return _skip(
-                        f"download attempt completed but required artifacts still missing: {type(exc2).__name__}: {exc2}",
-                        "missing_asset",
-                    )
-            return _skip(
-                f"SD15 assets missing and auto-download failed: {msg}",
-                "missing_asset",
+    stage_paths = _locate_stage_models(base_dir, unet_preference=unet_preference)
+    if not stage_paths and convert_if_missing:
+        if dry_run:
+            return _ok(
+                assets_dir=str(base_dir),
+                stage_paths={},
+                scenarios=scenarios,
+                message=f"dry-run: would attempt SD15 asset download under {base_dir} (unet_preference={unet_preference})",
             )
+        dl_ok, msg = _try_download_preconverted(base_dir, repo_id=download_repo)
+        if dl_ok:
+            stage_paths = _locate_stage_models(base_dir, unet_preference=unet_preference)
+            if stage_paths:
+                print(f"[diffusion_sd15] {msg}")
+        else:
+            return _skip(f"SD15 assets missing and auto-download failed: {msg}", "missing_asset")
 
-        return _skip(f"{type(exc).__name__}: {exc}", "missing_asset")
+    if not stage_paths:
+        return _skip(_expected_assets_message(base_dir), "missing_asset")
+
+    print(
+        "[diffusion_sd15] using assets: "
+        f"text_encoder={stage_paths['text_encoder']} unet={stage_paths['unet']} vae_decoder={stage_paths['vae_decoder']}"
+    )
+
+    return _ok(
+        model_id=model_id,
+        assets_dir=str(base_dir),
+        stage_paths={k: str(v) for k, v in stage_paths.items()},
+        scenarios=scenarios,
+        unet_preference=unet_preference,
+        message=f"using SD15 assets from {base_dir}",
+    )
 
 
 def run_bench(
@@ -383,11 +545,13 @@ def run_bench(
     **_: Any,
 ) -> Dict[str, Any]:
     model_alias = str(task_cfg.get("model_alias", "sd15"))
+    model_id = str(prep.get("model_id") or task_cfg.get("model_id") or DEFAULT_MODEL_ID)
     if prep.get("status") != "ok":
         return {
             "status": "error",
             "records": [
                 _error_row(
+                    model_id=model_id,
                     model_alias=model_alias,
                     scenario_label=None,
                     x_value=None,
@@ -406,29 +570,37 @@ def run_bench(
     warmup = int(sweep.get("warmup", 1))
     seed = int(sweep.get("seed", 1337))
 
-    stage_cfgs = task_cfg.get("compute_units", {}).get("stages", [])
-    if not stage_cfgs:
+    scenario_cfgs = prep.get("scenarios") or _parse_scenarios(task_cfg)
+    if not scenario_cfgs:
         return {
             "status": "error",
             "records": [
                 _error_row(
+                    model_id=model_id,
                     model_alias=model_alias,
                     scenario_label=None,
                     x_value=None,
                     prefill_cu=None,
                     decode_cu=None,
                     vae_cu=None,
-                    message="diffusion_sd15 compute_units.stages is empty",
+                    message="diffusion_sd15 scenarios are empty",
                     error_type="invalid_config",
                 )
             ],
         }
 
     if dry_run:
+        labels = [
+            _scenario_label(str(s.get("text_encoder")), str(s.get("unet")), str(s.get("vae")), str(s.get("label", "")))
+            for s in scenario_cfgs
+        ]
         return {
             "status": "ok",
             "records": [],
-            "message": f"dry-run: diffusion_sd15 scenarios={len(stage_cfgs)} steps={steps_list}",
+            "message": (
+                "dry-run: diffusion_sd15 "
+                f"scenarios={len(scenario_cfgs)} labels={labels} steps={steps_list} runs={runs} warmup={warmup}"
+            ),
         }
 
     stage_paths = {k: Path(v) for k, v in prep.get("stage_paths", {}).items()}
@@ -436,14 +608,15 @@ def run_bench(
 
     records: List[Dict[str, Any]] = []
 
-    for scenario in stage_cfgs:
+    for scenario in scenario_cfgs:
         te_cu = str(scenario.get("text_encoder"))
         unet_cu = str(scenario.get("unet"))
-        vae_cu = str(scenario.get("vae"))
+        vae_cu = str(scenario.get("vae") or scenario.get("vae_decoder"))
 
         if te_cu not in CU_MAP or unet_cu not in CU_MAP or vae_cu not in CU_MAP:
             records.append(
                 _error_row(
+                    model_id=model_id,
                     model_alias=model_alias,
                     scenario_label=None,
                     x_value=None,
@@ -456,7 +629,11 @@ def run_bench(
             )
             continue
 
-        scenario_label = f"TE:{ABBR.get(te_cu, te_cu)}|UN:{ABBR.get(unet_cu, unet_cu)}|VAE:{ABBR.get(vae_cu, vae_cu)}"
+        scenario_label = _scenario_label(te_cu, unet_cu, vae_cu, str(scenario.get("label", "")))
+        print(
+            f"[diffusion_sd15] scenario={scenario_label} "
+            f"text_encoder={te_cu} unet={unet_cu} vae={vae_cu}"
+        )
 
         try:
             text_model = _load_model(stage_paths["text_encoder"], te_cu)
@@ -465,6 +642,7 @@ def run_bench(
         except Exception as exc:
             records.append(
                 _error_row(
+                    model_id=model_id,
                     model_alias=model_alias,
                     scenario_label=scenario_label,
                     x_value=None,
@@ -492,6 +670,7 @@ def run_bench(
                 except Exception as exc:
                     records.append(
                         _error_row(
+                            model_id=model_id,
                             model_alias=model_alias,
                             scenario_label=scenario_label,
                             x_value=steps,
@@ -520,6 +699,7 @@ def run_bench(
                     )
                     records.append(
                         _ok_row(
+                            model_id=model_id,
                             model_alias=model_alias,
                             scenario_label=scenario_label,
                             steps=steps,
@@ -535,6 +715,7 @@ def run_bench(
                     summary = "\n".join(tb[-10:]) if tb else str(exc)
                     records.append(
                         _error_row(
+                            model_id=model_id,
                             model_alias=model_alias,
                             scenario_label=scenario_label,
                             x_value=steps,
@@ -623,9 +804,9 @@ def _extract_cost(plan: Any, op: Any) -> float:
         return float(cost)
     for attr in ("estimated_cost", "cost", "value", "weight"):
         if hasattr(cost, attr):
-            v = getattr(cost, attr)
-            if isinstance(v, (int, float)):
-                return float(v)
+            value = getattr(cost, attr)
+            if isinstance(value, (int, float)):
+                return float(value)
     try:
         return float(str(cost))
     except Exception:
@@ -645,7 +826,6 @@ def _compile_to_mlmodelc(input_path: Path, compiled_out: Path) -> Path:
     if proc.returncode == 0 and compiled_out.exists():
         return compiled_out
 
-    # Fallback for environments where `xcrun coremlc` is unavailable.
     try:
         ct.utils.compile_model(str(input_path), destination_path=str(compiled_out))
     except Exception as exc:
@@ -660,6 +840,35 @@ def _compile_to_mlmodelc(input_path: Path, compiled_out: Path) -> Path:
             raise FileNotFoundError(f"No compiled .mlmodelc produced for {input_path}")
         return candidates[0]
     return compiled_out
+
+
+def _device_bucket(text: str) -> Optional[str]:
+    t = str(text).lower()
+    if not t:
+        return None
+    if "neural" in t or "ane" in t:
+        return "NE"
+    if "gpu" in t:
+        return "GPU"
+    if "cpu" in t:
+        return "CPU"
+    return "OTHER"
+
+
+def _device_counts(rows: Sequence[Dict[str, Any]], key: str) -> Dict[str, int]:
+    counts = {"CPU": 0, "GPU": 0, "NE": 0, "OTHER": 0}
+    for row in rows:
+        raw = str(row.get(key) or "")
+        if not raw:
+            continue
+        buckets = set()
+        for token in raw.replace(",", "|").split("|"):
+            bucket = _device_bucket(token)
+            if bucket:
+                buckets.add(bucket)
+        for bucket in buckets:
+            counts[bucket] += 1
+    return counts
 
 
 def _dump_plan(compiled_path: Path, csv_path: Path) -> Dict[str, Any]:
@@ -703,9 +912,14 @@ def _dump_plan(compiled_path: Path, csv_path: Path) -> Dict[str, Any]:
         writer.writeheader()
         writer.writerows(rows)
 
+    top = sorted(rows, key=lambda r: float(r["estimated_cost"]), reverse=True)[:10]
     return {
         "num_operations": len(rows),
-        "top_20_ops_by_estimated_cost": sorted(rows, key=lambda r: float(r["estimated_cost"]), reverse=True)[:20],
+        "device_counts": {
+            "preferred": _device_counts(rows, "preferred_devices"),
+            "supported": _device_counts(rows, "supported_devices"),
+        },
+        "top_10_ops_by_estimated_cost": top,
         "csv": str(csv_path),
     }
 
@@ -719,6 +933,7 @@ def dump_computeplan(
     **_: Any,
 ) -> Dict[str, Any]:
     model_alias = str(task_cfg.get("model_alias", "sd15"))
+    model_id = str(prep.get("model_id") or task_cfg.get("model_id") or DEFAULT_MODEL_ID)
     if prep.get("status") != "ok":
         return _skip("prepare failed, skipping SD15 compute plan", "prepare_failed")
     if dry_run:
@@ -728,7 +943,11 @@ def dump_computeplan(
     reports_dir = (root_dir / "reports").resolve()
     compiled_root = (root_dir / "artifacts" / "compiled" / "diffusion_sd15" / model_alias).resolve()
 
-    summary: Dict[str, Any] = {"model_alias": model_alias, "stages": {}}
+    summary: Dict[str, Any] = {
+        "model_id": model_id,
+        "model_alias": model_alias,
+        "stages": {},
+    }
 
     try:
         for stage, src in stage_paths.items():

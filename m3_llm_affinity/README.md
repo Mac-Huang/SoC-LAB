@@ -130,6 +130,10 @@ Notes:
 - `configs/suite.yaml`: new multi-task suite schema
 - `configs/suite_qwen_decode_ctx64.yaml`: Qwen decode smoke run at context 64 only
 - `configs/suite_qwen_decode_ctx64_to_4096.yaml`: Qwen decode full context sweep (64 -> 4096)
+- `configs/suite_optional_tasks_smoke_sdxl_refiner_whisper_largev3.yaml`: canonical optional-task smoke (SDXL refiner + Whisper large-v3)
+- `configs/suite_optional_tasks_full_sdxl_refiner_whisper_largev3.yaml`: canonical optional-task full campaign (SDXL refiner + Whisper large-v3)
+- `configs/suite_optional_tasks_smoke_split_einsum_legacy.yaml`: legacy SD15 + Whisper tiny smoke
+- `configs/suite_optional_tasks_full_split_einsum_legacy.yaml`: legacy SD15 + Whisper tiny full
 - `configs/suite_optional_tasks_quick.yaml`: fast optional-task check (SD15 + OWSM)
 
 For the full config map and intended use, see `configs/README.md`.
@@ -145,6 +149,25 @@ For the full config map and intended use, see `configs/README.md`.
 - `speech_owsm` runs ESPnet inference on CPU/MPS backends (`uses_coreml=false`)
 
 All tasks are non-blocking: missing dependencies/assets produce `status=error` rows and the suite continues.
+
+## Future Test Hygiene
+
+Use these targets to clean caches and temporary artifacts without deleting benchmark outputs:
+
+```bash
+make clean-cache-local
+make clean-cache-global-hf
+make clean-future-tests
+```
+
+Notes:
+
+- `clean-future-tests` keeps `results/` and `reports/` intact.
+- Legacy optional-task campaign targets remain available via:
+  - `make optional-legacy-smoke`
+  - `make optional-legacy-full`
+  - `make optional-legacy-analyze-smoke`
+  - `make optional-legacy-analyze-full`
 
 ## Artifact Layout
 

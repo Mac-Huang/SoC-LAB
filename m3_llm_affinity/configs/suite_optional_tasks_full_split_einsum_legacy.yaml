@@ -1,0 +1,106 @@
+# Legacy preset (SD15 split-einsum + Whisper tiny.en).
+suite:
+  out_dir: "results"
+  reports_dir: "reports/analysis/suite/latest"
+  pick_latest_n_jsonl: 200
+  include_historical_results_globs:
+    - "results/llm_decode/**/*_bench.jsonl"
+
+tasks:
+  - task_type: "diffusion_sd15"
+    enabled: true
+    model_alias: "sd15"
+    artifact_set: "split_einsum"
+    assets_root: "assets/sd15_coreml/split_einsum/packages"
+    convert_if_missing: false
+    sweep:
+      steps_list: [10, 20, 30, 50, 100]
+      image_size: 512
+      runs: 3
+      warmup: 1
+      seed: 1337
+    scenarios:
+      - label: "ALL|ALL|ALL"
+        text_encoder: "ALL"
+        unet: "ALL"
+        vae: "ALL"
+      - label: "GPU|GPU|GPU"
+        text_encoder: "CPU_AND_GPU"
+        unet: "CPU_AND_GPU"
+        vae: "CPU_AND_GPU"
+      - label: "GPU|GPU|NE"
+        text_encoder: "CPU_AND_GPU"
+        unet: "CPU_AND_GPU"
+        vae: "CPU_AND_NE"
+      - label: "GPU|NE|GPU"
+        text_encoder: "CPU_AND_GPU"
+        unet: "CPU_AND_NE"
+        vae: "CPU_AND_GPU"
+      - label: "GPU|NE|NE"
+        text_encoder: "CPU_AND_GPU"
+        unet: "CPU_AND_NE"
+        vae: "CPU_AND_NE"
+      - label: "NE|GPU|GPU"
+        text_encoder: "CPU_AND_NE"
+        unet: "CPU_AND_GPU"
+        vae: "CPU_AND_GPU"
+      - label: "NE|GPU|NE"
+        text_encoder: "CPU_AND_NE"
+        unet: "CPU_AND_GPU"
+        vae: "CPU_AND_NE"
+      - label: "NE|NE|GPU"
+        text_encoder: "CPU_AND_NE"
+        unet: "CPU_AND_NE"
+        vae: "CPU_AND_GPU"
+      - label: "NE|NE|NE"
+        text_encoder: "CPU_AND_NE"
+        unet: "CPU_AND_NE"
+        vae: "CPU_AND_NE"
+
+  - task_type: "speech_whisperkit"
+    enabled: true
+    model_variant: "openai_whisper-tiny.en"
+    model_alias: "whisperkit_tiny_en"
+    assets_root: "assets/whisperkit_coreml"
+    download_if_missing: true
+    sweep:
+      audio_seconds_list: [5, 20, 40, 80]
+      sample_rate: 16000
+      runs: 3
+      warmup: 1
+      seed: 1337
+      decode_tokens_per_second: 2
+      max_decode_tokens: 256
+    scenarios:
+      - label: "GPU|GPU|GPU"
+        mel: "CPU_AND_GPU"
+        encoder: "CPU_AND_GPU"
+        decoder: "CPU_AND_GPU"
+      - label: "GPU|GPU|NE"
+        mel: "CPU_AND_GPU"
+        encoder: "CPU_AND_GPU"
+        decoder: "CPU_AND_NE"
+      - label: "GPU|NE|GPU"
+        mel: "CPU_AND_GPU"
+        encoder: "CPU_AND_NE"
+        decoder: "CPU_AND_GPU"
+      - label: "GPU|NE|NE"
+        mel: "CPU_AND_GPU"
+        encoder: "CPU_AND_NE"
+        decoder: "CPU_AND_NE"
+      - label: "NE|GPU|GPU"
+        mel: "CPU_AND_NE"
+        encoder: "CPU_AND_GPU"
+        decoder: "CPU_AND_GPU"
+      - label: "NE|GPU|NE"
+        mel: "CPU_AND_NE"
+        encoder: "CPU_AND_GPU"
+        decoder: "CPU_AND_NE"
+      - label: "NE|NE|GPU"
+        mel: "CPU_AND_NE"
+        encoder: "CPU_AND_NE"
+        decoder: "CPU_AND_GPU"
+      - label: "NE|NE|NE"
+        mel: "CPU_AND_NE"
+        encoder: "CPU_AND_NE"
+        decoder: "CPU_AND_NE"

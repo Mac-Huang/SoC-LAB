@@ -2,11 +2,12 @@ PYTHON ?= python3
 VENV ?= ../venv_soclab_m3
 PY := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
+SOC_PY ?= $(PYTHON)
 CONFIG ?= configs/default.yaml
 SUITE_CONFIG ?= configs/suite.yaml
 CTX ?= 64
 
-.PHONY: setup convert convert_ctx bench bench_ctx sweep_ctx plan analyze suite suite-llm suite-qwen suite-sd15 suite-owsm analyze-suite clean
+.PHONY: setup convert convert_ctx bench bench_ctx sweep_ctx plan analyze suite suite-llm suite-qwen suite-sd15 suite-owsm analyze-suite optional-smoke optional-full optional-analyze-smoke optional-analyze-full optional-legacy-smoke optional-legacy-full optional-legacy-analyze-smoke optional-legacy-analyze-full clean-cache-local clean-cache-global-hf clean-future-tests clean
 
 setup:
 	$(PYTHON) -m venv $(VENV)
@@ -59,6 +60,39 @@ suite-owsm:
 
 analyze-suite:
 	$(PY) scripts/07_analyze_results.py --suite-config $(SUITE_CONFIG)
+
+optional-smoke:
+	$(SOC_PY) scripts/08_run_suite.py --suite-config configs/suite_optional_tasks_smoke_sdxl_refiner_whisper_largev3.yaml --no-lm-rerun
+
+optional-full:
+	$(SOC_PY) scripts/08_run_suite.py --suite-config configs/suite_optional_tasks_full_sdxl_refiner_whisper_largev3.yaml --no-lm-rerun
+
+optional-analyze-smoke:
+	$(SOC_PY) scripts/07_analyze_results.py --suite-config configs/suite_optional_tasks_smoke_sdxl_refiner_whisper_largev3.yaml
+
+optional-analyze-full:
+	$(SOC_PY) scripts/07_analyze_results.py --suite-config configs/suite_optional_tasks_full_sdxl_refiner_whisper_largev3.yaml
+
+optional-legacy-smoke:
+	$(SOC_PY) scripts/08_run_suite.py --suite-config configs/suite_optional_tasks_smoke_split_einsum_legacy.yaml --no-lm-rerun
+
+optional-legacy-full:
+	$(SOC_PY) scripts/08_run_suite.py --suite-config configs/suite_optional_tasks_full_split_einsum_legacy.yaml --no-lm-rerun
+
+optional-legacy-analyze-smoke:
+	$(SOC_PY) scripts/07_analyze_results.py --suite-config configs/suite_optional_tasks_smoke_split_einsum_legacy.yaml
+
+optional-legacy-analyze-full:
+	$(SOC_PY) scripts/07_analyze_results.py --suite-config configs/suite_optional_tasks_full_split_einsum_legacy.yaml
+
+clean-cache-local:
+	$(SOC_PY) scripts/09_workspace_hygiene.py --local --yes
+
+clean-cache-global-hf:
+	$(SOC_PY) scripts/09_workspace_hygiene.py --global-hf --yes
+
+clean-future-tests:
+	$(SOC_PY) scripts/09_workspace_hygiene.py --local --global-hf --yes
 
 clean:
 	rm -rf $(VENV) artifacts models results reports
